@@ -5,13 +5,15 @@ import Home from '../views/Home.vue'
 import Connection from '../views/Connection.vue'
 import Department from '../views/Department.vue'
 import Evaluation from '../views/Evaluation.vue'
-import Manage from '../views/Manage.vue'
 import Personnel from '../views/Personnel.vue'
 import Record from '../views/Record.vue'
 import Statistics from '../views/Statistics.vue'
 import System from '../views/System.vue'
 import Resources from '../views/Resources.vue'
 import ProjectManagement from '../views/ProjectManagement.vue'
+import EmailTemplate from '../views/EmailTemplate.vue'
+import EmailServer from '../views/EmailServer.vue'
+import ResponseServer from '../views/ResponseServer.vue'
 
 const routes = [
   { path: '/', redirect: '/login' },
@@ -21,13 +23,15 @@ const routes = [
     {path:'connection',component:Connection},
     {path:'department',component:Department},
     {path:'evaluation',component:Evaluation},
-    {path:'manage',component:Manage},
     {path:'personnel',component:Personnel},
     {path:'record',component:Record},
     {path:'statistics',component:Statistics},
     {path:'system',component:System},
     {path:'resources',component:Resources},
-    {path:'projectManagement',component:ProjectManagement}
+    {path:'projectManagement',component:ProjectManagement},
+    {path:'emailTemplate',component:EmailTemplate},
+    {path:'emailServer',component:EmailServer},
+    {path:'responseServer',component:ResponseServer}
   ]},
 ]
 
