@@ -29,6 +29,15 @@ const toShow = () => {
                     <el-menu-item index="/home/evaluation">
                         <span>测评管理</span>
                     </el-menu-item>
+                    <el-menu-item index="/home/emailTemplate">
+                        <span>邮件模板管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/home/emailServer">
+                        <span>邮件服务器管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/home/responseServer">
+                        <span>响应服务器管理</span>
+                    </el-menu-item>
                     <el-menu-item index="/home/statistics">
                         <span>后台统计</span>
                     </el-menu-item>
@@ -38,18 +47,11 @@ const toShow = () => {
                     <el-menu-item index="/home/department">
                         <span>部门管理</span>
                     </el-menu-item>    
-                
-                    <el-menu-item index="/home/manage">
-                        <span>管理</span>
-                    </el-menu-item>
                     <el-menu-item index="/home/personnel">
                         <span>人员管理</span>
                     </el-menu-item>
                     <el-menu-item index="/home/record">
-                        <span>记录</span>
-                    </el-menu-item>
-                    <el-menu-item index="/home/resources">
-                        <span>资源</span>
+                        <span>日志管理</span>
                     </el-menu-item>
                     
                     <el-menu-item index="/home/system">

@@ -59,13 +59,15 @@
                 </el-form-item>
                 <el-form-item label="客户logo" prop="customerLogo">
                     <el-upload
-                        class="avatar-uploader"
+                        class="upload-demo"
                         action="https://jsonplaceholder.typicode.com/posts/"
-                        :show-file-list="false"
                         :on-success="handleAvatarSuccess"
-                        :before-upload="beforeAvatarUpload">
-                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        :before-upload="beforeAvatarUpload"
+                        :auto-upload="false"
+                        :file-list="[]">
+                        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitForm('form')">上传到服务器</el-button>
+                        <div slot="tip" class="el-upload__tip"></div>
                     </el-upload>
                 </el-form-item>
                 <el-form-item label="客户联系人" prop="customerContact">
