@@ -12,6 +12,7 @@ import Statistics from '../views/Statistics.vue'
 import System from '../views/System.vue'
 import Resources from '../views/Resources.vue'
 import ProjectManagement from '../views/ProjectManagement.vue'
+import Blacklist from '../views/Blacklist.vue'
 
 const routes = [
   { path: '/', redirect: '/login' },
@@ -27,7 +28,8 @@ const routes = [
     {path:'statistics',component:Statistics},
     {path:'system',component:System},
     {path:'resources',component:Resources},
-    {path:'projectManagement',component:ProjectManagement}
+    {path:'projectManagement',component:ProjectManagement},
+    {path:'blacklist',component:Blacklist}
   ]},
 ]
 

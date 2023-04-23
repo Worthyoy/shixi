@@ -4,6 +4,10 @@ import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 const router = useRouter()
 const admin = ref('admin')
+
+const toShow = () => {
+    router.push('/show')
+}
 </script>
 <template>
     <el-container class="home container">
@@ -11,6 +15,7 @@ const admin = ref('admin')
             <div>国信安钓鱼工具</div>
             <!-- 姓名以及退出按钮 -->
             <div style="float: right;">
+                <el-button type="text" style="padding-right: 40px;" @click="toShow">项目展示</el-button>
                 <span style="padding-right: 40px;color: #399;">{{admin}}</span>
                 <el-button type="text">退出</el-button>
             </div>
@@ -50,6 +55,9 @@ const admin = ref('admin')
                     <el-menu-item index="/home/system">
                         <span>系统管理</span>
                     </el-menu-item>
+                    <el-menu-item index="/home/blacklist">
+                        <span>黑名单管理</span>
+                    </el-menu-item>
                 </el-menu>
             </el-aside>
             <el-main><RouterView/></el-main>
@@ -61,6 +69,12 @@ const admin = ref('admin')
     margin: 0;
     padding: 0;
 }
+html,body,#app{
+    height: 100%;
+}
+.home{
+    height: 100%;
+}
 
 .home .el-header{
     display: flex;
@@ -69,5 +83,10 @@ const admin = ref('admin')
     color: #fff;
     justify-content: space-between;
     align-items: center;
+}
+
+.home .container2{
+    height: calc(100%-50px);
+    overflow: scroll;
 }
 </style>
