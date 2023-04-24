@@ -297,7 +297,7 @@ header {
 	.frame-border {
 		width: 90%;
 		border: 1px solid gainsboro;
-		background-color: white;
+		// background-color: white;
 		border-radius: 20px;
 		margin: auto;
 		display: flex;
