@@ -54,9 +54,9 @@ const toShow = () => {
                         <span>日志管理</span>
                     </el-menu-item>
                     
-                    <el-menu-item index="/home/system">
+                    <!-- <el-menu-item index="/home/system">
                         <span>系统管理</span>
-                    </el-menu-item>
+                    </el-menu-item> -->
                     <el-menu-item index="/home/blacklist">
                         <span>黑名单管理</span>
                     </el-menu-item>
@@ -74,7 +74,7 @@ const toShow = () => {
 html,body,#app{
     height: 100%;
 }
-.home{
+.home,.el-menu{
     height: 100%;
 }
 
