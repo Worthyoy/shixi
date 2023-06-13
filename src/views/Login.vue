@@ -20,15 +20,18 @@
 </template>
 <script setup>
 //引入el-form、el-form-item、el-input、el-button等组件
-import { ElForm, ElFormItem, ElInput, ElButton } from 'element-plus'
+import { ElForm, ElFormItem, ElInput, ElButton, ElMessageBox } from 'element-plus'
 //引入路由
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
+import axios from "axios";
+import { URL } from "../conf/URL"
+import { ElMessage } from 'element-plus'
 //使用路由
 const router = useRouter()
 const form = ref({
-    name: '',
-    region: '',
+    name: 'xxx@xxx',
+    region: '123',
     date1: '',
     date2: '',
     delivery: false,
@@ -37,9 +40,23 @@ const form = ref({
     desc: ''
 })
 const onSubmit = () => {
-    console.log('submit!')
-    router.push('/home')
+    axios.post('/api/auth/login', {
+        email:form.value.name,
+        password:form.value.region,
+    }).then((rsp) => {
+        console.log(rsp.data);
+        if (rsp.data.status == 'success') {
+            router.push('/home')
+        } else {
+            ElMessage('this is a message.');//提示消息框或按钮。将rsp.data传递给页面中的
+        }
+    }).catch((err) => {
+        ElMessage('this is a err message.');
+        console.log(err);
+    })
+    
 }
+
 </script>
 <style scoped>
     .el-form{
