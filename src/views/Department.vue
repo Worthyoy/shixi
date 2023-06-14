@@ -1,207 +1,200 @@
-<!-- 部门 -->
 <template>
     <div class="box">
-        <div class="left">
-            <el-tree :data="data" :props="defaultProps" :render-content="renderContent" @node-click="handleNodeClick" />
-        </div>
-        <div class="right">
-            <el-form :inline="true" class="form">
-                <el-form-item>
-                    <el-button @click="add()" type="primary" class="button">新增</el-button>
-                </el-form-item>
-
-                <el-form-item>
-                    <el-button @click="deleall()" type="primary" class="button">删除</el-button>
-                </el-form-item>
-                <el-form-item>
-                    <el-input v-model="input" placeholder="请输入编号" clearable></el-input>
-                </el-form-item>
-                <el-form-item>
-
-                </el-form-item>
-                <el-form-item>
-                    <el-button @click="search()" type="primary" class="button">查询</el-button>
-                </el-form-item>
-            </el-form>
-            <!-- 基于elementplus，table表格，表格内容为项目编号、项目名称、测评次数、测评序号、测评名称、测评类别、操作（暂停、恢复、删除、锁定、解锁、报告生成、报告更新、下载） -->
-            <el-table :data="currentTableData" v-model:selected-row-keys="selectedRowKeys"
-                @selection-change="handleSelectionChange" class="table" width="100%">
-                <el-table-column type="selection" />
-                <el-table-column prop="id" label="id" width="100"></el-table-column>
-                <el-table-column prop="name" label="名称" width="100"></el-table-column>
-                <el-table-column prop="comments" label="comments" width="100"></el-table-column>
-                <el-table-column fixed="right" label="操作">
-                    <template #default="scope">
-                        <el-button @click="dele(scope.row.id)" type="text">删除</el-button>
-                        <el-button @click="edit(scope.row.id)" type="text">修改</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-
-            <!-- 分页 -->
-            <el-pagination background layout="prev, pager, next" :total="100" class="pagination"
-                @current-change="handleCurrentChange"></el-pagination>
-
-            <!-- 基于elementplus弹框，内容为form表单，内容包含：客户名称的input、客户logo的图片上传、客户联系人的input、联系人职位的input、练习方式的input、项目说明的textare -->
-            <el-dialog v-model="dialogVisible" title="新增项目">
-                <el-form :model="form" label-width="100px">
-                    <el-form-item label="name">
-                        <el-input v-model="form.name"></el-input>
-                    </el-form-item>
-                    <el-form-item label="logopath">
-                        <el-input v-model="form.logopath"></el-input>
-                    </el-form-item>
-                    <el-form-item label="istoporg">
-                        <el-input v-model="form.istoporg"></el-input>
-                    </el-form-item>
-                    <el-form-item label="higherorgid">
-                        <el-input v-model="form.higherorgid"></el-input>
-                    </el-form-item>
-                    <el-form-item label="isslocked">
-                        <el-input v-model="form.islocked"></el-input>
-                    </el-form-item>
-                    <el-form-item label="comments">
-                        <el-input v-model="form.comments"></el-input>
-                    </el-form-item>
-                </el-form>
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="dialogVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="submitForm('form')">确 定</el-button>
-                </span>
-            </el-dialog>
-
-
-
-            <!-- 基于elementplus弹框，内容为form表单，内容包含：客户名称的input、客户logo的图片上传、客户联系人的input、联系人职位的input、练习方式的input、项目说明的textare -->
-            <el-dialog v-model="dialogVisible1" title="新增项目">
-                <el-form :model="form1" label-width="100px">
-                    <el-form-item label="name">
-                        <el-input v-model="form1.name"></el-input>
-                    </el-form-item>
-                    <el-form-item label="logopath">
-                        <el-input v-model="form1.logopath"></el-input>
-                    </el-form-item>
-                    <el-form-item label="istoporg">
-                        <el-input v-model="form1.istoporg"></el-input>
-                    </el-form-item>
-                    <el-form-item label="higherorgid">
-                        <el-input v-model="form1.higherorgid"></el-input>
-                    </el-form-item>
-                    <el-form-item label="isslocked">
-                        <el-input v-model="form1.islocked"></el-input>
-                    </el-form-item>
-                    <el-form-item label="comments">
-                        <el-input v-model="form1.comments"></el-input>
-                    </el-form-item>
-                </el-form>
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="dialogVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="submitForm1('form')">确 定</el-button>
-                </span>
-            </el-dialog>
-        </div>
+      <div class="left">
+        <el-tree
+          :data="data"
+          :props="defaultProps"
+          :render-content="renderContent"
+          @node-click="handleNodeClick"
+        />
+      </div>
+      <div class="right">
+        <el-form :inline="true" class="form">
+          <el-form-item>
+            <el-button @click="add()" type="primary" class="button">新增</el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-button @click="deleall()" type="primary" class="button">删除</el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-input v-model="input" placeholder="请输入编号" clearable></el-input>
+          </el-form-item>
+          <el-form-item>
+          </el-form-item>
+          <el-form-item>
+            <el-button @click="search()" type="primary" class="button">查询</el-button>
+          </el-form-item>
+        </el-form>
+        <el-table :data="pagedData" v-model:selected-row-keys="selectedRowKeys" 
+                  @selection-change="handleSelectionChange" :page-size="pageSize" class="table" width="100%">
+          <el-table-column type="selection" />
+          <el-table-column prop="id" label="id" width="100"></el-table-column>
+          <el-table-column prop="name" label="名称" width="100"></el-table-column>
+          <el-table-column prop="comments" label="comments" width="100"></el-table-column>
+          <el-table-column fixed="right" label="操作">
+            <template #default="scope">
+              <el-button @click="dele(scope.row.id)" type="text">删除</el-button>
+              <el-button @click="edit(scope.row.id)" type="text">修改</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-pagination background layout="prev, pager, next"
+        :current-page="currentPage"
+        :total="tableData.length"
+        :page-size="pageSize"
+        @current-change="handleCurrentChange">
+        </el-pagination>
+        <el-dialog v-model="dialogVisible" title="新增项目" >
+          <el-form :model="form" label-width="100px">
+            <el-form-item label="name" >
+              <el-input v-model="form.name"></el-input>
+            </el-form-item>
+            <el-form-item label="logopath" >
+              <el-input v-model="form.logopath"></el-input>
+            </el-form-item>
+            <el-form-item label="istoporg" >
+              <el-input v-model="form.istoporg"></el-input>
+            </el-form-item>
+            <el-form-item label="higherorgid" >
+              <el-input v-model="form.higherorgid"></el-input>
+            </el-form-item>
+            <el-form-item label="isslocked" >
+              <el-input v-model="form.islocked"></el-input>
+            </el-form-item>
+            <el-form-item label="comments" >
+              <el-input v-model="form.comments"></el-input>
+            </el-form-item>
+          </el-form>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="submitForm('form')">确 定</el-button>
+          </span>
+        </el-dialog>
+        <el-dialog v-model="dialogVisible1" title="修改项目" >
+          <el-form :model="form1" label-width="100px">
+            <el-form-item label="name" >
+              <el-input v-model="form1.name"></el-input>
+            </el-form-item>
+            <el-form-item label="logopath" >
+              <el-input v-model="form1.logopath"></el-input>
+            </el-form-item>
+            <el-form-item label="istoporg" >
+              <el-input v-model="form1.istoporg"></el-input>
+            </el-form-item>
+            <el-form-item label="higherorgid" >
+              <el-input v-model="form1.higherorgid"></el-input>
+            </el-form-item>
+            <el-form-item label="isslocked" >
+              <el-input v-model="form1.islocked"></el-input>
+            </el-form-item>
+            <el-form-item label="comments" >
+              <el-input v-model="form1.comments"></el-input>
+            </el-form-item>
+          </el-form>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible1 = false">取 消</el-button>
+            <el-button type="primary" @click="submitForm1('form')">确 定</el-button>
+          </span>
+        </el-dialog>
+      </div>
     </div>
-</template>
-<script setup>
-import { ElTable, ElTableColumn, ElPagination, ElButton, ElMessage, ElForm, ElFormItem, ElInput } from 'element-plus'
-//引入路由
-import { useRouter } from 'vue-router'
-import { ref, onMounted, reactive, watch, computed } from 'vue'
-import axios from 'axios';
-let currentPage = ref(1);
-let pageSize = ref(3);
-let total = ref(0);
-let currentTableData = ref([])
-function getCurrentPageData(val) {
-    let begin = (val - 1) * pageSize.value;
-    let end = val * pageSize.value;
-    currentTableData.value = tableData.value.slice(
-        begin,
-        end
-    );
-    console.log(currentTableData.value);
+  </template>
+  
+  <script setup>
+  import { ElTable, ElTableColumn, ElPagination, ElButton, ElMessage, ElForm, 
+           ElFormItem, ElInput, ElDialog, ElTree} from 'element-plus'
+  
+  //引入路由
+  import { useRouter } from 'vue-router'
+  
+  import { ref, onMounted, reactive, watch, computed } from 'vue'
+  import axios from 'axios';
+  
+  //分页
+  const currentPage = ref(1)
+  const pageSize = 5
+  const offset = computed(() => ((currentPage.value - 1) * pageSize))
+  const totalPages = computed(() => Math.ceil(tableData.value.length / pageSize))
+  const pagedData = computed(() => tableData.value.slice(offset.value, (offset.value + pageSize)))
+  const handleCurrentChange = (val) => {
+  currentPage.value = val;
 }
-function handleCurrentChange(val) {
-    getCurrentPageData(val);
-    currentPage.value = val;
-};
 
-// let arr = reactive([])
-// function change(){
+// 批量删除勾选
 
-// arr.push({
-//     bianhao: '6',
-//     mingcheng: '项目6',
-//     fujibianhao: '6',
-//     beizhu: '备注6'
-//     })
-// }
 const selectedRowKeys = ref([])
 const selectedIds = ref([])
 const handleSelectionChange = (selectedRows) => {
-    // 判断是否有选择的数据
-    if (selectedRows.length > 0) {
-        const ids = selectedRows.map(item => item.id)
-        selectedIds.value = ids
-    }
+  // 判断是否有选择的数据
+  if (selectedRows.length > 0) {
+    const ids = selectedRows.map(item => item.id)
+    selectedIds.value = ids
+  } 
 }
 const deleall = () => {
 
     for (let i = 0; i < selectedIds.value.length; i++) {
-        const item = selectedIds.value[i]
-        dele(item)
-    }
+    const item = selectedIds.value[i]
+    dele(item)
+    } 
 }
+//变量定义
 const input = ref("");
 
 const dialogVisible = ref(false);
 const dialogVisible1 = ref(false);
 const form = ref({
-    "name": "",
-    "logopath": "N/A",
-    "istoporg": false,
-    "higherorgid": 0,
-    "islocked": false,
-    "comments": "string"
+  "name": "",
+  "logopath": "N/A",
+  "istoporg": false,
+  "higherorgid": 0,
+  "islocked": false,
+  "comments": "string"
 })
 const form1 = ref({
-    "name": "",
-    "logopath": "N/A",
-    "istoporg": false,
-    "higherorgid": 0,
-    "islocked": false,
-    "comments": "string"
+  "name": "",
+  "logopath": "N/A",
+  "istoporg": false,
+  "higherorgid": 0,
+  "islocked": false,
+  "comments": "string"
 })
 
-const tableData = ref([]);
-
+const tableData= ref([]);
+//页面初始化
 onMounted(() => {
     axios({
-        method: 'get',
+        method:'get',
         url: '/api/organization/',
     }).then(res => {
-
-        tableData.value = res.data.children;
-        tableData.value.push(...res.data.children);
-        tableData.value.push(...res.data.children);
-        total.value = tableData.value.length;
-        getCurrentPageData(1);
+        
+        tableData.value=res.data.children
     })
-    // 在这里可以执行一些需要等待DOM渲染完成之后才能执行的代码
+  // 在这里可以执行一些需要等待DOM渲染完成之后才能执行的代码
 });
-
+//新增和修改的弹窗
 const i = ref('')
 const edit = (id) => {
     i.value = id
     dialogVisible1.value = true;
-
-
 }
 const add = () => {
-
+   
     dialogVisible.value = true;
-
+  
 }
+const fetchData = () => {
+   
+  axios({
+        method:'get',
+        url: '/api/organization/',
+    }).then(res => {
+        
+        tableData.value=res.data.children
+    })
+ 
+}
+//新增提交
 const submitForm = () => {
     axios.post('/api/organization/', form.value, {
         headers: {
@@ -218,10 +211,10 @@ const submitForm = () => {
             alert(error);
         })
 }
-
+//修改提交
 const submitForm1 = () => {
     alert(i.value)
-    axios.put('/api/organization/' + i.value, form1.value, {
+    axios.put('/api/organization/'+i.value, form1.value,{
         headers: {
             "Authorization": "Bearer " + sessionStorage.getItem('Authorization')
         }
@@ -238,42 +231,35 @@ const submitForm1 = () => {
         })
 
 }
-const fetchData = () => {
-    axios({
-        method: 'get',
-        url: '/api/organization/',
-    }).then(res => {
-        tableData.value = res.data.children
-    })
-}
+//单个删除
 const dele = (id) => {
     axios.delete(`/api/organization/${id}`)
-        .then(response => {
-
-            fetchData()
-        })
-        .catch(error => {
-            alert(error)
-        })
+    .then(response => {
+      
+      fetchData()
+    })
+    .catch(error => {
+      alert(error)
+    })
 }
-
+//查询
 const search = () => {
-    const i = input.value
-    //alert(i)
-    axios.get(`/api/organization/${i}`)
-        .then(res => {
+   const i = input.value
+   //alert(i)
+   axios.get(`/api/organization/${i}`)
+   .then(res => {
+       
+        // alert(res.data.name)
 
-            // alert(res.data.name)
-
-            tableData.value = []
-            tableData.value.push(res.data)
-        }).catch(error => {
-            alert(error)
-        })
+        tableData.value=[]
+        tableData.value.push(res.data)
+    }) .catch(error => {
+      alert(error)
+    })
 
 }
 
-
+//分级
 let filteredData = tableData;
 const data = [{
     id: 1,
@@ -318,55 +304,63 @@ const defaultProps = {
 }
 
 const handleNodeClick = (node) => {
-    if (node.label == "一级 1") {
-        fetchData()
-    }
-
-    else {
-        tableData.value = []
+    if(node.label=="一级 1"){
+        axios({
+        method:'get',
+        url: '/api/organization/',
+    }).then(res => {
+        tableData.value=res.data.children.slice(0,3);
+    })
+    
+    }else if(node.label=="一级 2"){
+        axios({
+        method:'get',
+        url: '/api/organization/',
+    }).then(res => {
+        tableData.value=res.data.children.slice(3,5);
+    })
+    }else if(node.label=="一级 3"){
+        axios({
+        method:'get',
+        url: '/api/organization/',
+    }).then(res => {
+        tableData.value=res.data.children.slice(5);
+    })
     }
 }
 
-const renderContent = (h, {
-    node, data, store
+const renderContent = (h, { node, data, store }) => {
+  const level = node.level
+  let content = null
 
-}) => {
-    const level = node.level
-    let content = null
-    switch (level) {
-        case 1:
-            content = h('span', {
-                class: 'level-1'
-            }
+  switch (level) {
+    case 1:
+      content = h('span', { class: 'level-1' }, data.label)
+      break
+    case 2:
+      content = h('span', { class: 'level-2' }, data.label)
+      break
+    case 3:
+      content = h('span', { class: 'level-3' }, data.label)
+      break
+    default:
+      content = h('span', {}, data.label)
+  }
 
-                , data.label)
-            break
-        case 2:
-            content = h('span', {
-                class: 'level-2'
-            }
-
-                , data.label)
-            break
-        case 3: content = h('span', {
-            class: 'level-3'
-        }
-
-            , data.label)
-            break
-        default: content = h('span', {}
-
-            , data.label)
-    }
-
-    return content
+  return content
 }
+
 </script>
 <style scoped>
 .pagination {
-    margin-top: 20px;
+  margin-top: 20px;
+  display: flex;  
+  justify-content: flex-end;
+}
+
+.box {
     display: flex;
-    justify-content: flex-end;
+    height: 100%;
 }
 
 .left {
@@ -381,9 +375,7 @@ const renderContent = (h, {
     padding-left: 20px;
 
 }
-
-
-/* .title {
+.title {
     height: 50px;
     line-height: 50px;
     font-weight: bold;
@@ -392,5 +384,5 @@ const renderContent = (h, {
 
 .el-table {
     margin-bottom: 20px;
-} */
+}
 </style>
