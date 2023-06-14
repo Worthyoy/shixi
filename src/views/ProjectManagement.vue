@@ -37,17 +37,17 @@
             <el-table-column fixed="right" label="操作">
                 <template #default>
                     <el-button type="text">暂停</el-button>
-                    <el-button type="text" >恢复</el-button>
-                    <el-button type="text" >删除</el-button>
-                    <el-button type="text" >锁定</el-button>
-                    <el-button type="text" >解锁</el-button>
+                    <el-button type="text">恢复</el-button>
+                    <el-button type="text">删除</el-button>
+                    <el-button type="text">锁定</el-button>
+                    <el-button type="text">解锁</el-button>
                     <el-button type="text">报告生成</el-button>
-                    <el-button type="text" >报告更新</el-button>
-                    <el-button type="text" >下载</el-button>
+                    <el-button type="text">报告更新</el-button>
+                    <el-button type="text">下载</el-button>
                 </template>
             </el-table-column>
         </el-table>
-        
+
         <!-- 分页 -->
         <el-pagination background layout="prev, pager, next" :total="100" class="pagination"></el-pagination>
 
@@ -89,11 +89,11 @@
                 <el-button type="primary" @click="submitForm()">确 定</el-button>
             </span>
         </el-dialog>
-        
+
     </div>
 </template>
 <script setup>
-import { ref,unref } from 'vue'
+import { ref, unref } from 'vue'
 
 const dialogVisible = ref(false);
 //table数据
@@ -175,7 +175,7 @@ const add = () => {
 }
 const cancelForm = () => {
     // couldn't put reset in add()
-    if(formref){
+    if (formref) {
         const form = unref(formref)
         form.resetFields();
     }
@@ -219,12 +219,12 @@ const rules = ref({
 const submitForm = async () => {
     // need unref first !! then check
     const form = unref(formref)
-    if(!form) return
-    try{
+    if (!form) return
+    try {
         await form.validate()
-        console.log('huhuhuuuu',form.value)
+        console.log('huhuhuuuu', form.value)
     } catch (error) {
-        console.log('noooo',form.value)
+        console.log('noooo', form.value)
     }
 }
 //图片上传
