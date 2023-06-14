@@ -56,8 +56,8 @@
                 </template>
             </el-table-column>
         </el-table>
-       
-        
+
+
         <!-- 分页 -->
         <el-pagination background layout="prev, pager, next" :total="100" class="pagination"></el-pagination>
 
@@ -68,15 +68,12 @@
                     <el-input v-model="form.customerName" placeholder="请输入客户名称"></el-input>
                 </el-form-item>
                 <el-form-item label="图标" prop="customerLogo">
-                    <el-upload
-                        class="upload-demo"
-                        action="https://jsonplaceholder.typicode.com/posts/"
-                        :on-success="handleAvatarSuccess"
-                        :before-upload="beforeAvatarUpload"
-                        :auto-upload="false"
+                    <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/"
+                        :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" :auto-upload="false"
                         :file-list="[]">
                         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-                        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitForm('form')">上传到服务器</el-button>
+                        <el-button style="margin-left: 10px;" size="small" type="success"
+                            @click="submitForm('form')">上传到服务器</el-button>
                         <div slot="tip" class="el-upload__tip"></div>
                     </el-upload>
                 </el-form-item>
@@ -104,9 +101,9 @@
                 </el-form-item>
             </el-form>
         </el-dialog>
-        
-        
-        
+
+
+
     </div>
 </template>
 <script setup>
@@ -114,24 +111,24 @@ import { ref } from 'vue'
 const dialogVisible = ref(false);
 //table数据
 const tableData = ref([{
-    name:'存续',
-    time1:'2021-08-01',
-    time2:'2021-08-01'
+    name: '存续',
+    time1: '2021-08-01',
+    time2: '2021-08-01'
 },
 {
-    name:'存续',
-    time1:'2021-08-01',
-    time2:'2021-08-01'
+    name: '存续',
+    time1: '2021-08-01',
+    time2: '2021-08-01'
 },
 {
-    name:'存续',
-    time1:'2021-08-01',
-    time2:'2021-08-01'
+    name: '存续',
+    time1: '2021-08-01',
+    time2: '2021-08-01'
 },
 {
-    name:'存续',
-    time1:'2021-08-01',
-    time2:'2021-08-01'
+    name: '存续',
+    time1: '2021-08-01',
+    time2: '2021-08-01'
 }
 ])
 const add = () => {

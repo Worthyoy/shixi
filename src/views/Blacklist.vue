@@ -28,12 +28,12 @@
             <el-table-column prop="b_remark" label="备注" width="100"></el-table-column>
             <el-table-column fixed="right" label="操作">
                 <template #default="scope">
-                    <el-button link type="primary">{{scope.row.b_status === '禁用' ? '启用' : '禁用'}}</el-button>
-                    <el-button link type="primary" >删除</el-button>
+                    <el-button link type="primary">{{ scope.row.b_status === '禁用' ? '启用' : '禁用' }}</el-button>
+                    <el-button link type="primary">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
-        
+
         <!-- 分页 -->
         <el-pagination background layout="prev, pager, next" :total="100" class="pagination"></el-pagination>
 
@@ -59,9 +59,9 @@
                     <el-input v-model="form.b_remark"></el-input>
                 </el-form-item>
                 <el-form-item label="状态" prop="b_status">
-                    <el-select v-model="form.b_status" >
-                        <el-option label="禁用" value="1"/>
-                        <el-option label="启用" value="1"/>
+                    <el-select v-model="form.b_status">
+                        <el-option label="禁用" value="1" />
+                        <el-option label="启用" value="1" />
                     </el-select>
                 </el-form-item>
             </el-form>
@@ -70,7 +70,7 @@
                 <el-button type="primary" @click="submitForm('form')">确 定</el-button>
             </span>
         </el-dialog>
-        
+
     </div>
 </template>
 <script setup>
@@ -122,7 +122,7 @@ const tableData = ref([
         b_addtime: '2023-02-05',
         b_status: '启用',
         b_remark: '无'
-    },{
+    }, {
         b_id: '006',
         b_type: 'IP',
         b_value: '1',
@@ -140,7 +140,7 @@ const tableData = ref([
         b_status: '禁用',
         b_remark: '无'
     },
-   
+
 ]);
 const add = () => {
     dialogVisible.value = true;

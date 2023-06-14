@@ -53,23 +53,19 @@
 
         <!-- 基于elementplus弹框，内容为form表单，内容包含：客户名称的input、客户logo的图片上传、客户联系人的input、联系人职位的input、练习方式的input、项目说明的textare -->
         <el-dialog v-model="dialogVisible" title="新增项目">
-            <!-- <el-form :model="form" :rules="rules" ref="form" label-width="100px"> here ref should be diff from model ! -->
-            <el-form :model="form" ref="formref" :rules="rules" label-width="100px">
+            <el-form :model="form" :rules="rules" ref="form" label-width="100px">
                 <el-form-item label="客户名称" prop="customerName">
-                    <el-input type="text" v-model="form.customerName"></el-input>
+                    <el-input v-model="form.customerName"></el-input>
                 </el-form-item>
                 <el-form-item label="客户logo" prop="customerLogo">
-                    <!-- <el-upload
-                        class="upload-demo"
-                        action="https://jsonplaceholder.typicode.com/posts/"
-                        :on-success="handleAvatarSuccess"
-                        :before-upload="beforeAvatarUpload"
-                        :auto-upload="false"
+                    <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/"
+                        :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" :auto-upload="false"
                         :file-list="[]">
                         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-                        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitForm('form')">上传到服务器</el-button>
+                        <el-button style="margin-left: 10px;" size="small" type="success"
+                            @click="submitForm('form')">上传到服务器</el-button>
                         <div slot="tip" class="el-upload__tip"></div>
-                    </el-upload> -->
+                    </el-upload>
                 </el-form-item>
                 <el-form-item label="客户联系人" prop="customerContact">
                     <el-input v-model="form.customerContact"></el-input>
@@ -85,16 +81,15 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="cancelForm()">取 消</el-button>
-                <el-button type="primary" @click="submitForm()">确 定</el-button>
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="submitForm('form')">确 定</el-button>
             </span>
         </el-dialog>
 
     </div>
 </template>
 <script setup>
-import { ref, unref } from 'vue'
-
+import { ref } from 'vue'
 const dialogVisible = ref(false);
 //table数据
 const tableData = ref([
@@ -173,14 +168,6 @@ const tableData = ref([
 const add = () => {
     dialogVisible.value = true;
 }
-const cancelForm = () => {
-    // couldn't put reset in add()
-    if (formref) {
-        const form = unref(formref)
-        form.resetFields();
-    }
-    dialogVisible.value = false
-}
 //表单
 const form = ref({
     customerName: '',
@@ -190,7 +177,6 @@ const form = ref({
     practiceMode: '',
     projectDescription: ''
 });
-const formref = ref(null)
 const rules = ref({
     customerName: [
         { required: true, message: '请输入客户名称', trigger: 'blur' }
@@ -211,39 +197,26 @@ const rules = ref({
         { required: true, message: '请输入项目说明', trigger: 'blur' }
     ]
 });
-// const submitForm = (formName) => {
-//     console.log(formName);
-//     console.log(form.value);
-// }
-// 提交验证！
-const submitForm = async () => {
-    // need unref first !! then check
-    const form = unref(formref)
-    if (!form) return
-    try {
-        await form.validate()
-        console.log('huhuhuuuu', form.value)
-    } catch (error) {
-        console.log('noooo', form.value)
-    }
+const submitForm = (formName) => {
+    console.log(formName);
 }
 //图片上传
-// const imageUrl = ref('');
-// const handleAvatarSuccess = (res, file) => {
-//     imageUrl.value = URL.createObjectURL(file.raw);
-// };
-// const beforeAvatarUpload = (file) => {
-//     const isJPG = file.type === 'image/jpeg';
-//     const isLt2M = file.size / 1024 / 1024 < 2;
+const imageUrl = ref('');
+const handleAvatarSuccess = (res, file) => {
+    imageUrl.value = URL.createObjectURL(file.raw);
+};
+const beforeAvatarUpload = (file) => {
+    const isJPG = file.type === 'image/jpeg';
+    const isLt2M = file.size / 1024 / 1024 < 2;
 
-//     if (!isJPG) {
-//         this.$message.error('上传头像图片只能是 JPG 格式!');
-//     }
-//     if (!isLt2M) {
-//         this.$message.error('上传头像图片大小不能超过 2MB!');
-//     }
-//     return isJPG && isLt2M;
-// };
+    if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!');
+    }
+    if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!');
+    }
+    return isJPG && isLt2M;
+};
 
 </script>
 <style scoped>

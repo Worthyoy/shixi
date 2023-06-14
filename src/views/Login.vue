@@ -31,7 +31,7 @@ import { ElForm, ElFormItem, ElInput, ElButton, ElMessageBox } from 'element-plu
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import axios from "axios";
-import { URL } from "../conf/URL"
+
 import { ElMessage } from 'element-plus'
 //使用路由
 const router = useRouter()

@@ -28,7 +28,7 @@
                 <el-input placeholder="编号/人名"></el-input>
             </el-form-item>
             <el-form-item>
-                
+
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" class="button">查询</el-button>
@@ -60,15 +60,15 @@
                 </template>
             </el-table-column>
         </el-table>
-       
-        
+
+
         <!-- 分页 -->
         <el-pagination background layout="prev, pager, next" :total="100" class="pagination"></el-pagination>
 
         <!-- 基于elementplus弹框，内容为form表单，内容包含：单位名称的select、部门名称的select、用户名的input、邮箱的input、角色的input、用户密码的input、岗位类别的select、职位的input、手机的input、备注的input、下载的按钮、导入的按钮 -->
         <el-dialog v-model="dialogVisible" title="新增">
-            <el-form :model="form" :rules="rules" ref="form" label-width="80px" class="form">
-                <el-form-item label="单位名称" prop="customerName">
+            <el-form :model="form" ref="form" label-width="80px" class="form">
+                <el-form-item label="单位名称">
                     <el-input v-model="form.customerName" placeholder="请输入单位名称"></el-input>
                 </el-form-item>
                 <el-form-item label="部门名称" prop="customerLogo">
@@ -102,11 +102,11 @@
                     <el-button type="primary" @click="submitForm('form')">提交</el-button>
                     <el-button @click="dialogVisible = false">取消</el-button>
                 </el-form-item>
-            </el-form>  
-            </el-dialog>    
-                
-        
-        
+            </el-form>
+        </el-dialog>
+
+
+
     </div>
 </template>
 <script setup>

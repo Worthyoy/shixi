@@ -37,19 +37,18 @@ import { ElForm, ElFormItem, ElInput, ElButton, ElMessageBox } from 'element-plu
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import axios from "axios";
-import { URL } from "../conf/URL"
 import { ElMessage } from 'element-plus'
 //使用路由
 const router = useRouter()
 const form = ref({
-    email: "4",
-    mobile: "4",
-    telephone: "4",
-    wechat_num: "4",
-    telecom_num: "4",
-    username: "44",
-    password: "4",
-    sysrole: "4",
+    email: "3",
+    mobile: "3",
+    telephone: "3",
+    wechat_num: "3",
+    telecom_num: "3",
+    username: "3334",
+    password: "3",
+    sysrole: "3",
     orgid: 0
 })
 const onSubmit = () => {
@@ -65,29 +64,31 @@ const onSubmit = () => {
         ElMessage('this is a err message.');
         console.log(err);
     })
-    
+
 }
 
 </script>
 <style scoped>
-    .el-form{
-        position: absolute;
-        left: 50%;
-        top: 37%;
-        margin-left: -300px;
-        margin-top: -150px;
-        width: 600px;
-        height: 500px;
-        border: 1px solid #ccc;
-        padding: 10px 40px 0 0;
-    }
-    .login .s{
-        display: flex;
-        justify-content: space-between;
-    }
-    .login h2{
-        font-size: 30px;
-        text-align: center;
-        font-weight: bolder;
-    }
+.el-form {
+    position: absolute;
+    left: 50%;
+    top: 37%;
+    margin-left: -300px;
+    margin-top: -150px;
+    width: 600px;
+    height: 500px;
+    border: 1px solid #ccc;
+    padding: 10px 40px 0 0;
+}
+
+.login .s {
+    display: flex;
+    justify-content: space-between;
+}
+
+.login h2 {
+    font-size: 30px;
+    text-align: center;
+    font-weight: bolder;
+}
 </style>

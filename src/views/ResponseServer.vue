@@ -37,9 +37,9 @@
                 </template>
             </el-table-column>
         </el-table>
-        
-       
-        
+
+
+
         <!-- 分页 -->
         <el-pagination background layout="prev, pager, next" :total="100" class="pagination"></el-pagination>
 
@@ -49,15 +49,15 @@
                 <el-form-item label="主题" prop="customerName">
                     <el-input v-model="form.customerName" placeholder="请输入主题"></el-input>
                 </el-form-item>
-                
+
                 <el-form-item>
                     <el-button type="primary" @click="submitForm('form')">提交</el-button>
                     <el-button @click="dialogVisible = false">取消</el-button>
                 </el-form-item>
             </el-form>
         </el-dialog>
-        
-        
+
+
     </div>
 </template>
 <script setup>

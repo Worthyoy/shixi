@@ -27,7 +27,7 @@
                     <el-option label="暂停" value="暂停"></el-option>
                     <el-option label="删除" value="删除"></el-option>
                 </el-select>
-            </el-form-item> 
+            </el-form-item>
         </el-form>
         <!-- 基于elementplus，table表格，表格内容为编号、邮件标题、创建时间、有无附件、存续状态、备注 -->
         <el-table :data="tableData" style="width: 100%" class="table">
@@ -46,7 +46,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        
+
         <!-- 分页 -->
         <el-pagination background layout="prev, pager, next" :total="100" class="pagination"></el-pagination>
 
@@ -60,15 +60,12 @@
                     <el-input v-model="form.customerLogo" placeholder="请输入内容"></el-input>
                 </el-form-item>
                 <el-form-item label="附件" prop="customerContact">
-                    <el-upload
-                        class="upload-demo"
-                        action="https://jsonplaceholder.typicode.com/posts/"
-                        :on-success="handleAvatarSuccess"
-                        :before-upload="beforeAvatarUpload"
-                        :auto-upload="false"
+                    <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/"
+                        :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" :auto-upload="false"
                         :file-list="[]">
                         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-                        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitForm('form')">上传到服务器</el-button>
+                        <el-button style="margin-left: 10px;" size="small" type="success"
+                            @click="submitForm('form')">上传到服务器</el-button>
                         <div slot="tip" class="el-upload__tip"></div>
                     </el-upload>
                 </el-form-item>
@@ -81,8 +78,8 @@
                 </el-form-item>
             </el-form>
         </el-dialog>
-        
-        
+
+
     </div>
 </template>
 <script setup>
@@ -91,25 +88,25 @@ const dialogVisible = ref(false);
 //table数据
 const tableData = ref([
     {
-        title:'邮件标题',
-        time:'2021-08-09',
-        attachment:'有',
-        status:'存续',
-        remark:'备注'
+        title: '邮件标题',
+        time: '2021-08-09',
+        attachment: '有',
+        status: '存续',
+        remark: '备注'
     },
     {
-        title:'邮件标题',
-        time:'2021-08-09',
-        attachment:'有',
-        status:'存续',
-        remark:'备注'
+        title: '邮件标题',
+        time: '2021-08-09',
+        attachment: '有',
+        status: '存续',
+        remark: '备注'
     },
     {
-        title:'邮件标题',
-        time:'2021-08-09',
-        attachment:'有',
-        status:'存续',
-        remark:'备注'
+        title: '邮件标题',
+        time: '2021-08-09',
+        attachment: '有',
+        status: '存续',
+        remark: '备注'
     }
 ])
 const add = () => {

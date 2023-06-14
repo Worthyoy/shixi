@@ -48,14 +48,14 @@
             <el-table-column fixed="right" label="操作">
                 <template #default>
                     <el-button type="text">暂停</el-button>
-                    <el-button type="text" >开始</el-button>
-                    <el-button type="text" >恢复</el-button>
-                    <el-button type="text" >修改</el-button>
-                    <el-button type="text" >删除</el-button>
+                    <el-button type="text">开始</el-button>
+                    <el-button type="text">恢复</el-button>
+                    <el-button type="text">修改</el-button>
+                    <el-button type="text">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
-        
+
         <!-- 分页 -->
         <el-pagination background layout="prev, pager, next" :total="100" class="pagination"></el-pagination>
         <!-- 基于elementplus弹框，内容为form表单，内容包含：目标选择的下拉菜单，邮件模板选择下拉菜单、接收方评率限制下拉菜单、发送时段输入框、选择邮件服务器输入框、邮件发件人输入框、选择相应服务器输入框、备注输入框 -->
@@ -103,101 +103,101 @@
     </div>
 </template>
 <script setup>
-    //引入reactive
-    import { reactive,ref } from 'vue';
-    //dialogVisible
-    const dialogVisible = ref(false);
-    //form  
-    const form = reactive({
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
-    });
-    //form2
-    const from2=reactive({
-        mubiao:'',
-        emailTemplate:'',
-        pinglv:'',
-        shiduan:'',
-        server:'',
-        people:'',
-        server2:'',
-        beizhu:''
-    })
+//引入reactive
+import { reactive, ref } from 'vue';
+//dialogVisible
+const dialogVisible = ref(false);
+//form  
+const form = reactive({
+    name: '',
+    region: '',
+    date1: '',
+    date2: '',
+    delivery: false,
+    type: [],
+    resource: '',
+    desc: ''
+});
+//form2
+const from2 = reactive({
+    mubiao: '',
+    emailTemplate: '',
+    pinglv: '',
+    shiduan: '',
+    server: '',
+    people: '',
+    server2: '',
+    beizhu: ''
+})
 
 
-    //tableData数据
-    const tableData = reactive([
-        {
-            number: '1',
-            type: '1',
-            name: '测评1',
-            status: '1',
-            project: '项目1',
-            num: '1',
-            xianzhi: '1',
-            templateNo: '1',
-            emailNo: '1',
-            serverNo: '1',
-            date: '2021-07-01',
-            is: '1',
-            beizhu: '1'
-        },
-        {
-            number: '2',
-            type: '2',
-            name: '测评2',
-            status: '2',
-            project: '项目2',
-            num: '2',
-            xianzhi: '2',
-            templateNo: '2',
-            emailNo: '2',
-            serverNo: '2',
-            date: '2021-07-02',
-            is: '2',
-            beizhu: '2'
-        },
-        {
-            number: '3',
-            type: '3',
-            name: '测评3',
-            status: '3',
-            project: '项目3',
-            num: '3',
-            xianzhi: '3',
-            templateNo: '3',
-            emailNo: '3',
-            serverNo: '3',
-            date: '2021-07-03',
-            is: '3',
-            beizhu: '3'
-        },
-        {
-            number: '4',
-            type: '4',
-            name: '测评4',
-            status: '4',
-            project: '项目4',
-            num: '4',
-            xianzhi: '4',
-            templateNo: '4',
-            emailNo: '4',
-            serverNo: '4',
-            date: '2021-07-04',
-            is: '4',
-            beizhu: '4'
-        }]
-    );
-    //add
-    const add = () => {
-        dialogVisible.value = true;
-    }
+//tableData数据
+const tableData = reactive([
+    {
+        number: '1',
+        type: '1',
+        name: '测评1',
+        status: '1',
+        project: '项目1',
+        num: '1',
+        xianzhi: '1',
+        templateNo: '1',
+        emailNo: '1',
+        serverNo: '1',
+        date: '2021-07-01',
+        is: '1',
+        beizhu: '1'
+    },
+    {
+        number: '2',
+        type: '2',
+        name: '测评2',
+        status: '2',
+        project: '项目2',
+        num: '2',
+        xianzhi: '2',
+        templateNo: '2',
+        emailNo: '2',
+        serverNo: '2',
+        date: '2021-07-02',
+        is: '2',
+        beizhu: '2'
+    },
+    {
+        number: '3',
+        type: '3',
+        name: '测评3',
+        status: '3',
+        project: '项目3',
+        num: '3',
+        xianzhi: '3',
+        templateNo: '3',
+        emailNo: '3',
+        serverNo: '3',
+        date: '2021-07-03',
+        is: '3',
+        beizhu: '3'
+    },
+    {
+        number: '4',
+        type: '4',
+        name: '测评4',
+        status: '4',
+        project: '项目4',
+        num: '4',
+        xianzhi: '4',
+        templateNo: '4',
+        emailNo: '4',
+        serverNo: '4',
+        date: '2021-07-04',
+        is: '4',
+        beizhu: '4'
+    }]
+);
+//add
+const add = () => {
+    dialogVisible.value = true;
+}
 </script>
 <style scoped>
 .title {

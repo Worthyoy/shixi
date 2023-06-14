@@ -12,7 +12,7 @@ const tableData = [
         t_id: '1012',
         t_name: '2023年度测评',
         t_type: '重度测评',
-        t_status:"进行中",
+        t_status: "进行中",
         family: [
             {
                 t_id: '1',
@@ -65,7 +65,7 @@ const tableData = [
         t_id: '1012',
         t_name: '2023年度测评',
         t_type: '重度测评',
-        t_status:"进行中",
+        t_status: "进行中",
         family: [
             {
                 t_id: '1',
@@ -118,7 +118,7 @@ const tableData = [
         t_id: '1012',
         t_name: '2023年度测评',
         t_type: '重度测评',
-        t_status:"进行中",
+        t_status: "进行中",
         family: [
             {
                 t_id: '1',
@@ -171,7 +171,7 @@ const tableData = [
         t_id: '1012',
         t_name: '2023年度测评',
         t_type: '重度测评',
-        t_status:"进行中",
+        t_status: "进行中",
         family: [
             {
                 t_id: '1',
@@ -224,7 +224,7 @@ const tableData = [
         t_id: '1012',
         t_name: '2023年度测评',
         t_type: '重度测评',
-        t_status:"进行中",
+        t_status: "进行中",
         family: [
             {
                 t_id: '1',
@@ -277,7 +277,7 @@ const tableData = [
         t_id: '1012',
         t_name: '2023年度测评',
         t_type: '重度测评',
-        t_status:"进行中",
+        t_status: "进行中",
         family: [
             {
                 t_id: '1',
@@ -381,13 +381,14 @@ const tableData = [
 </template>
 
 <style lang="less" scoped>
-    .title {
-        height: 50px;
-        line-height: 50px;
-        font-weight: bold;
-        font-size: 20px;
-    }
-    .el-table {
-        margin-top: 20px;
-    }
+.title {
+    height: 50px;
+    line-height: 50px;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.el-table {
+    margin-top: 20px;
+}
 </style>
