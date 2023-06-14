@@ -31,30 +31,24 @@
                 <el-table-column prop="comments" label="comments" width="100"></el-table-column>
                 <el-table-column fixed="right" label="操作">
                     <template #default="scope">
-                        <el-button  @click="dele(scope.row.id)" type="text">删除</el-button>
+                        <el-button @click="dele(scope.row.id)" type="text">删除</el-button>
                         <el-button @click="edit()" type="text">修改</el-button>
                     </template>
                 </el-table-column>
             </el-table>
 
             <!-- 分页 -->
-            <el-pagination 
-                background 
-                :current-page="currentPage"
-                :page-size="pageSize"
-                layout="total, prev, pager, next, jumper"
-                :total="total"
-                @current-change="handleCurrentChange"
-                @size-change="handleSizeChange" 
-                class="pagination"></el-pagination>
+            <el-pagination background :current-page="currentPage" :page-size="pageSize"
+                layout="total, prev, pager, next, jumper" :total="total" @current-change="handleCurrentChange"
+                @size-change="handleSizeChange" class="pagination"></el-pagination>
 
             <!-- 基于elementplus弹框，内容为form表单，内容包含：客户名称的input、客户logo的图片上传、客户联系人的input、联系人职位的input、练习方式的input、项目说明的textare -->
-            <el-dialog v-model="dialogVisible" title="新增项目" >
-                <el-form :model="form"  label-width="100px">
-                    <el-form-item label="客户名称" >
+            <el-dialog v-model="dialogVisible" title="新增项目">
+                <el-form :model="form" label-width="100px">
+                    <el-form-item label="客户名称">
                         <el-input v-model="form.customerName"></el-input>
                     </el-form-item>
-                    <el-form-item label="客户logo" >
+                    <el-form-item label="客户logo">
                         <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/"
                             :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" :auto-upload="false"
                             :file-list="[]">
@@ -64,16 +58,16 @@
                             <div slot="tip" class="el-upload__tip"></div>
                         </el-upload>
                     </el-form-item>
-                    <el-form-item label="客户联系人" >
+                    <el-form-item label="客户联系人">
                         <el-input v-model="form.customerContact"></el-input>
                     </el-form-item>
-                    <el-form-item label="联系人职位" >
+                    <el-form-item label="联系人职位">
                         <el-input v-model="form.contactPosition"></el-input>
                     </el-form-item>
-                    <el-form-item label="练习方式" >
+                    <el-form-item label="练习方式">
                         <el-input v-model="form.practiceMode"></el-input>
                     </el-form-item>
-                    <el-form-item label="项目说明" >
+                    <el-form-item label="项目说明">
                         <el-input type="textarea" v-model="form.projectDescription"></el-input>
                     </el-form-item>
                 </el-form>
@@ -89,7 +83,7 @@
 import { ElForm, ElFormItem, ElInput, ElButton } from 'element-plus'
 //引入路由
 import { useRouter } from 'vue-router'
-import { ref,onMounted, reactive  } from 'vue'
+import { ref, onMounted, reactive } from 'vue'
 import axios from 'axios';
 let currentPage = ref(1);
 let pageSize = ref(3);
@@ -120,7 +114,7 @@ function handleCurrentChange(val) {
 // }
 const input = ref('');
 const mode = ref('');
-const editForm=ref({});
+const editForm = ref({});
 const dialogVisible = ref(false);
 const form = ref({
     customerName: '',
@@ -131,11 +125,11 @@ const form = ref({
     projectDescription: ''
 })
 
-const tableData= ref([]);
+const tableData = ref([]);
 
 onMounted(() => {
     axios({
-        method:'get',
+        method: 'get',
         url: '/api/organization/',
     }).then(res => {
         tableData.value = res.data.children;
@@ -144,51 +138,51 @@ onMounted(() => {
         total.value = tableData.value.length;
         getCurrentPageData(1);
     })
-  // 在这里可以执行一些需要等待DOM渲染完成之后才能执行的代码
+    // 在这里可以执行一些需要等待DOM渲染完成之后才能执行的代码
 });
 
 
 const edit = () => {
 
 
-  
+
 }
 const add = () => {
-   
+
     dialogVisible.value = true;
-  
+
 }
 const submitForm = () => {
     const { customerName } = form.value
-    
-  axios.post('/api/organization/', form.value)
-    .then(response => {
-      // 后端处理成功后执行的代码
-      dialogVisible.value = false;
-    })
-    .catch(error => {
-      // 后端处理失败后执行的代码
-      alert(error);
-    })
+
+    axios.post('/api/organization/', form.value)
+        .then(response => {
+            // 后端处理成功后执行的代码
+            dialogVisible.value = false;
+        })
+        .catch(error => {
+            // 后端处理失败后执行的代码
+            alert(error);
+        })
 }
 
 const fetchData = () => {
     axios({
-        method:'get',
+        method: 'get',
         url: '/api/organization/',
     }).then(res => {
-        
-        tableData.value=res.data.children
+
+        tableData.value = res.data.children
     })
 }
 const dele = (id) => {
     axios.delete(`/api/organization/${id}`)
-    .then(response => {
-      fetchData()
-    })
-    .catch(error => {
-      alert(error)
-    })
+        .then(response => {
+            fetchData()
+        })
+        .catch(error => {
+            alert(error)
+        })
 }
 
 const search = () => {
@@ -260,6 +254,7 @@ const defaultProps = {
     padding-left: 20px;
 
 }
+
 .title {
     height: 50px;
     line-height: 50px;
@@ -271,7 +266,7 @@ const defaultProps = {
     margin-bottom: 20px;
 }
 
-.pagination{
+.pagination {
     position: absolute;
     bottom: 5vh;
 }
