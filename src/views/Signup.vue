@@ -42,14 +42,14 @@ import { ElMessage } from 'element-plus'
 //使用路由
 const router = useRouter()
 const form = ref({
-    email: "3",
-    mobile: "3",
-    telephone: "3",
-    wechat_num: "3",
-    telecom_num: "3",
-    username: "3334",
-    password: "3",
-    sysrole: "3",
+    email: "4",
+    mobile: "4",
+    telephone: "4",
+    wechat_num: "4",
+    telecom_num: "4",
+    username: "44",
+    password: "4",
+    sysrole: "4",
     orgid: 0
 })
 const onSubmit = () => {
