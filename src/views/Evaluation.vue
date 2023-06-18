@@ -30,7 +30,7 @@
             </el-form-item>
         </el-form>
         <!-- 基于elementplus，table表格，表格内容为项目编号、项目名称、测评次数、测评序号、测评名称、测评类别、操作（暂停、恢复、删除、锁定、解锁、报告生成、报告更新、下载） -->
-        <el-table :data="tableData" class="table" width="100%">
+        <el-table :data="currentTableData" class="table" width="100%">
             <el-table-column type="selection" />
             <el-table-column prop="number" label="编号" width="100"></el-table-column>
             <el-table-column prop="type" label="类型" width="100"></el-table-column>
@@ -57,7 +57,8 @@
         </el-table>
 
         <!-- 分页 -->
-        <el-pagination background layout="prev, pager, next" :total="100" class="pagination"></el-pagination>
+        <el-pagination background layout="prev, pager, next" :total="total" :page-size="pageSize" class="pagination"
+            @current-change="handleCurrentChange" style="position: absolute;bottom: 4vh;"></el-pagination>
         <!-- 基于elementplus弹框，内容为form表单，内容包含：目标选择的下拉菜单，邮件模板选择下拉菜单、接收方评率限制下拉菜单、发送时段输入框、选择邮件服务器输入框、邮件发件人输入框、选择相应服务器输入框、备注输入框 -->
         <el-dialog v-model="dialogVisible" title="新增">
             <el-form :model="form2" :rules="rules" ref="form" label-width="180px" class="demo-ruleForm">
@@ -104,7 +105,29 @@
 </template>
 <script setup>
 //引入reactive
-import { reactive, ref } from 'vue';
+import { reactive, ref, onMounted } from 'vue';
+onMounted(() => {
+    getCurrentPageData(1)
+    total.value = tableData.value.length;
+    console.log(total.value)
+})
+let currentPage = ref(1);
+let pageSize = ref(1);
+let total = ref(0);
+let currentTableData = ref([])
+function getCurrentPageData(val) {
+    let begin = (val - 1) * pageSize.value;
+    let end = val * pageSize.value;
+    currentTableData.value = tableData.value.slice(
+        begin,
+        end
+    );
+    console.log(currentTableData.value);
+}
+function handleCurrentChange(val) {
+    getCurrentPageData(val);
+    currentPage.value = val;
+};
 //dialogVisible
 const dialogVisible = ref(false);
 //form  
@@ -132,7 +155,7 @@ const from2 = reactive({
 
 
 //tableData数据
-const tableData = reactive([
+const tableData = ref([
     {
         number: '1',
         type: '1',

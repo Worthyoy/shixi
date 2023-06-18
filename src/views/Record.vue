@@ -20,20 +20,43 @@
             </el-form-item>
         </el-form>
 
-        <el-table :data="tableData" class="table" width="100%">
+        <el-table :data="currentTableData" class="table" width="100%">
             <el-table-column type="selection" />
             <el-table-column prop="type" label="类型"></el-table-column>
             <el-table-column prop="time" label="时间"></el-table-column>
         </el-table>
 
         <!-- 分页 -->
-        <el-pagination background layout="prev, pager, next" :total="100" class="pagination"></el-pagination>
+        <el-pagination background layout="prev, pager, next" :total="total" :page-size="pageSize" class="pagination"
+            @current-change="handleCurrentChange" style="position: absolute;bottom: 4vh;"></el-pagination>
 
 
     </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue';
+onMounted(() => {
+    getCurrentPageData(1)
+    total.value = tableData.value.length;
+    console.log(total.value)
+})
+let currentPage = ref(1);
+let pageSize = ref(5);
+let total = ref(0);
+let currentTableData = ref([])
+function getCurrentPageData(val) {
+    let begin = (val - 1) * pageSize.value;
+    let end = val * pageSize.value;
+    currentTableData.value = tableData.value.slice(
+        begin,
+        end
+    );
+    console.log(currentTableData.value);
+}
+function handleCurrentChange(val) {
+    getCurrentPageData(val);
+    currentPage.value = val;
+};
 const dialogVisible = ref(false);
 //table数据
 const tableData = ref([{

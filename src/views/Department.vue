@@ -39,8 +39,8 @@
             </el-table>
 
             <!-- 分页 -->
-            <el-pagination background layout="prev, pager, next" :total="100" class="pagination"
-                @current-change="handleCurrentChange"></el-pagination>
+            <el-pagination background layout="prev, pager, next" :total="total" :page-size="pageSize" class="pagination"
+                @current-change="handleCurrentChange" style="position: absolute;bottom: 4vh;"></el-pagination>
 
             <!-- 基于elementplus弹框，内容为form表单，内容包含：客户名称的input、客户logo的图片上传、客户联系人的input、联系人职位的input、练习方式的input、项目说明的textare -->
             <el-dialog v-model="dialogVisible" title="新增项目">
@@ -119,7 +119,6 @@ function getCurrentPageData(val) {
         begin,
         end
     );
-    console.log(currentTableData.value);
 }
 function handleCurrentChange(val) {
     getCurrentPageData(val);
@@ -365,8 +364,7 @@ const renderContent = (h, {
     margin-top: 20px;
     display: flex;
     justify-content: flex-end;
-    position: absolute;
-    bottom: 4vh;
+
 }
 
 .left {

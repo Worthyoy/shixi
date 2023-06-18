@@ -29,11 +29,7 @@
                 <el-button @click="mulunlock()" type="primary" class="button">解锁</el-button>
             </el-form-item>
             <el-form-item>
-                <el-input
-                    v-model="searchinput"
-                    placeholder="Please input"
-                    class="input-with-select"
-                >
+                <el-input v-model="searchinput" placeholder="Please input" class="input-with-select">
                     <template #prepend>
                         <el-select v-model="searchselect" placeholder="Select" style="width: 115px">
                             <!-- <el-option label="id" value="id" /> -->
@@ -42,13 +38,14 @@
                         </el-select>
                     </template>
                     <template #append>
-                        <el-button :icon="Search" @click="getSearchinfo()"/>
+                        <el-button :icon="Search" @click="getSearchinfo()" />
                     </template>
                 </el-input>
             </el-form-item>
         </el-form>
         <!-- 基于elementplus，table表格，表格内容为项目编号、项目名称、测评次数、测评序号、测评名称、测评类别、操作（暂停、恢复、删除、锁定、解锁、报告生成、报告更新、下载） -->
-        <el-table ref="multipleTableRef" :row-key="getRowKeys" @selection-change="handleSelectionChange" :data="tableData" class="table" border width="100%">
+        <el-table ref="multipleTableRef" :row-key="getRowKeys" @selection-change="handleSelectionChange"
+            :data="currentTableData" class="table" border width="100%">
             <el-table-column fixed type="selection" />
             <el-table-column fixed type="expand" label="展开">
                 <!-- 展开后显示项目下的任务 -->
@@ -89,7 +86,8 @@
         </el-table>
 
         <!-- 分页 -->
-        <el-pagination background layout="prev, pager, next" :total="100" class="pagination"></el-pagination>
+        <el-pagination background layout="prev, pager, next" :total="total" :page-size="pageSize" class="pagination"
+            @current-change="handleCurrentChange" style="position: absolute;bottom: 4vh;"></el-pagination>
 
         <!-- 基于elementplus弹框，内容为form表单，内容包含：客户名称的input、客户logo的图片上传、客户联系人的input、联系人职位的input、练习方式的input、项目说明的textare -->
         <el-dialog v-model="adddialogVisible" title="新增项目">
@@ -135,8 +133,29 @@
     </div>
 </template>
 <script setup>
-import { ref,unref } from 'vue'
+import { ref, unref, onMounted } from 'vue'
 import { Search } from '@element-plus/icons-vue'
+onMounted(() => {
+    getCurrentPageData(1)
+    total.value = tableData.value.length;
+})
+let currentPage = ref(1);
+let pageSize = ref(5);
+let total = ref(0);
+let currentTableData = ref([])
+function getCurrentPageData(val) {
+    let begin = (val - 1) * pageSize.value;
+    let end = val * pageSize.value;
+    currentTableData.value = tableData.value.slice(
+        begin,
+        end
+    );
+    console.log(currentTableData.value);
+}
+function handleCurrentChange(val) {
+    getCurrentPageData(val);
+    currentPage.value = val;
+};
 const adddialogVisible = ref(false);
 //table数据
 const tableData = ref([
@@ -211,6 +230,22 @@ const tableData = ref([
         evaluationSerialNumber: '9',
         evaluationName: '测评9',
         evaluationCategory: '类别9'
+    },
+    {
+        projectNumber: '010',
+        projectName: '项目10',
+        evaluationNumber: '10',
+        evaluationSerialNumber: '10',
+        evaluationName: '测评10',
+        evaluationCategory: '类别10'
+    },
+    {
+        projectNumber: '011',
+        projectName: '项目11',
+        evaluationNumber: '11',
+        evaluationSerialNumber: '11',
+        evaluationName: '测评11',
+        evaluationCategory: '类别11'
     }]);
 // const get
 const add = () => {
@@ -288,10 +323,10 @@ const rules = ref({
 const submitForm = async () => {
     // need unref first !! then check otherwise error
     const refform = unref(formref)
-    if(!refform) return
-    try{
+    if (!refform) return
+    try {
         await refform.validate()
-        console.log('huhuhuuuu',form.value)
+        console.log('huhuhuuuu', form.value)
         // axios({
         //     method:'post',
         //     url: 'http://172.16.113.158:5000/user/',
@@ -306,11 +341,11 @@ const submitForm = async () => {
         adddialogVisible.value = false
         // })
     } catch (error) {
-        console.log('no! form add failed! ',form.value)
+        console.log('no! form add failed! ', form.value)
     }
 }
 const cancelForm = () => {
-    if(formref){
+    if (formref) {
         const form = unref(formref)
         form.resetFields();
     }
@@ -333,15 +368,15 @@ const cancelForm = () => {
 //     }
 //     return isJPG && isLt2M;
 // };
-const handleEdit = ()=> {
+const handleEdit = () => {
 }
-const handleLock = ()=> {
+const handleLock = () => {
 }
-const handleUnlock = ()=> {
+const handleUnlock = () => {
 }
-const handleFreeze = ()=> {
+const handleFreeze = () => {
 }
-const handleUnfreeze = ()=> {
+const handleUnfreeze = () => {
 }
 // 搜索框
 const searchselect = ref('')
@@ -349,15 +384,15 @@ const searchinput = ref('')
 // toolbar工具条多选操作
 const mullock = () => {
 }
-const mulunlock = ()=> {
+const mulunlock = () => {
 }
-const mulfre = ()=> {
+const mulfre = () => {
 }
-const mulunfre = ()=> {
+const mulunfre = () => {
 }
-const muldel = ()=> {
+const muldel = () => {
 }
-const getSearchinfo = () => {}
+const getSearchinfo = () => { }
 </script>
 <style scoped>
 .title {
@@ -370,6 +405,7 @@ const getSearchinfo = () => {}
 .el-table {
     margin-bottom: 20px;
 }
+
 .input-with-select .el-input-group__prepend {
     background-color: var(--el-fill-color-blank);
 }

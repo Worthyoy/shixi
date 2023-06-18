@@ -100,7 +100,7 @@ body,
 }
 
 /*主菜单样式*/
-.el-submenu__title {}
+
 
 /*主菜单悬浮样式*/
 .el-submenu__title:hover {

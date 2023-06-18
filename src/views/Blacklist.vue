@@ -17,7 +17,7 @@
             </el-form-item>
         </el-form>
         <!-- 基于elementplus，table表格，表格内容为项目编号、项目名称、测评次数、测评序号、测评名称、测评类别、操作（暂停、恢复、删除、锁定、解锁、报告生成、报告更新、下载） -->
-        <el-table :data="tableData" class="table" width="100%">
+        <el-table :data="currentTableData" class="table" width="100%">
             <el-table-column type="selection" />
             <el-table-column prop="b_id" label="编号" width="100"></el-table-column>
             <el-table-column prop="b_type" label="类型" width="100"></el-table-column>
@@ -35,7 +35,8 @@
         </el-table>
 
         <!-- 分页 -->
-        <el-pagination background layout="prev, pager, next" :total="100" class="pagination"></el-pagination>
+        <el-pagination background layout="prev, pager, next" :total="total" :page-size="pageSize" class="pagination"
+            @current-change="handleCurrentChange" style="position: absolute;bottom: 4vh;"></el-pagination>
 
         <!-- 基于elementplus弹框，内容为form表单，内容包含：客户名称的input、客户logo的图片上传、客户联系人的input、联系人职位的input、练习方式的input、项目说明的textare -->
         <el-dialog v-model="dialogVisible" title="新增项目">
@@ -74,7 +75,28 @@
     </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue';
+onMounted(() => {
+    getCurrentPageData(1)
+    total.value = tableData.value.length;
+})
+let currentPage = ref(1);
+let pageSize = ref(5);
+let total = ref(0);
+let currentTableData = ref([])
+function getCurrentPageData(val) {
+    let begin = (val - 1) * pageSize.value;
+    let end = val * pageSize.value;
+    currentTableData.value = tableData.value.slice(
+        begin,
+        end
+    );
+    console.log(currentTableData.value);
+}
+function handleCurrentChange(val) {
+    getCurrentPageData(val);
+    currentPage.value = val;
+};
 const dialogVisible = ref(false);
 //table数据
 const tableData = ref([
