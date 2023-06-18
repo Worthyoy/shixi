@@ -45,7 +45,7 @@
         </el-form>
         <!-- 基于elementplus，table表格，表格内容为项目编号、项目名称、测评次数、测评序号、测评名称、测评类别、操作（暂停、恢复、删除、锁定、解锁、报告生成、报告更新、下载） -->
         <el-table ref="multipleTableRef" :row-key="getRowKeys" @selection-change="handleSelectionChange"
-            :data="currentTableData" class="table" border width="100%">
+            :data="currentTableData" class="table" :border="true" width="100%">
             <el-table-column fixed type="selection" />
             <el-table-column fixed type="expand" label="展开">
                 <!-- 展开后显示项目下的任务 -->
@@ -257,7 +257,7 @@ const multipleSelection = ref([])
 const select_order_number = ref('')
 const select_orderId = ref([])
 const getRowKeys = (row) => {
-    return row.id;
+    return row.projectNumber;
 }
 const handleSelectionChange = (val) => {
     // 来回切换页面，也保留上次选中情况
@@ -404,6 +404,10 @@ const getSearchinfo = () => { }
 
 .el-table {
     margin-bottom: 20px;
+}
+
+.table {
+    height: 60vh;
 }
 
 .input-with-select .el-input-group__prepend {
