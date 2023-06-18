@@ -97,4 +97,22 @@ body,
 .home .container2 {
     height: calc(100%-50px);
     overflow: scroll;
-}</style>
+}
+
+/*主菜单样式*/
+.el-submenu__title {}
+
+/*主菜单悬浮样式*/
+.el-submenu__title:hover {
+    color: white !important;
+    background: #1890FF !important;
+}
+
+
+
+/*子菜单悬浮样式*/
+.el-menu-item:hover {
+    color: white !important;
+    background: #1890FF !important;
+}
+</style>
