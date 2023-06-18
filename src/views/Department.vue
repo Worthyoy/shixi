@@ -194,8 +194,6 @@ const i = ref('')
 const edit = (id) => {
     i.value = id
     dialogVisible1.value = true;
-
-
 }
 const add = () => {
 
@@ -367,6 +365,8 @@ const renderContent = (h, {
     margin-top: 20px;
     display: flex;
     justify-content: flex-end;
+    position: absolute;
+    bottom: 4vh;
 }
 
 .left {
@@ -381,16 +381,4 @@ const renderContent = (h, {
     padding-left: 20px;
 
 }
-
-
-/* .title {
-    height: 50px;
-    line-height: 50px;
-    font-weight: bold;
-    font-size: 20px;
-}
-
-.el-table {
-    margin-bottom: 20px;
-} */
 </style>
