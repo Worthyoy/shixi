@@ -50,6 +50,12 @@ const toShow = () => {
                     <el-menu-item index="/home/personnel">
                         <span>人员管理</span>
                     </el-menu-item>
+                    <el-menu-item index="/home/sysuser">
+                        <span>系统人员管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/home/targetuser">
+                        <span>被测用户管理</span>
+                    </el-menu-item>
                     <el-menu-item index="/home/record">
                         <span>日志管理</span>
                     </el-menu-item>
