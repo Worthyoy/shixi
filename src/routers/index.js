@@ -16,6 +16,8 @@ import Blacklist from '../views/Blacklist.vue'
 import EmailTemplate from '../views/EmailTemplate.vue'
 import EmailServer from '../views/EmailServer.vue'
 import ResponseServer from '../views/ResponseServer.vue'
+import Sysuser from '../views/Sysuser.vue'
+import Targetuser from '../views/Targetuser.vue'
 
 const routes = [
     { path: '/', redirect: '/login' },
@@ -38,7 +40,9 @@ const routes = [
             { path: 'blacklist', component: Blacklist },
             { path: 'emailTemplate', component: EmailTemplate },
             { path: 'emailServer', component: EmailServer },
-            { path: 'responseServer', component: ResponseServer }
+            { path: 'responseServer', component: ResponseServer },
+            { path: 'sysuser', component: Sysuser },
+            { path: 'targetuser', component: Targetuser}
         ]
     },
 ]
