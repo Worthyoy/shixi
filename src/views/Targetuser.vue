@@ -13,16 +13,22 @@
                 <el-button @click="muldel()" type="primary" class="button">删除</el-button>
             </el-form-item>
             <el-form-item>
-                <el-button @click="mulfro()" type="primary" class="button">冻结</el-button>
+                <el-button-group>
+                    <el-button @click="mulfro()" type="primary" class="button">冻结</el-button>
+                    <el-button @click="mulunfro()" type="primary" class="button">解冻</el-button>
+                </el-button-group>
             </el-form-item>
             <el-form-item>
-                <el-button @click="mulunfro()" type="primary" class="button">解冻</el-button>
+                <el-button-group>
+                    <el-button @click="mullock()" type="primary" class="button">锁定</el-button>
+                    <el-button @click="mulunlock()" type="primary" class="button">解锁</el-button>
+                </el-button-group>
             </el-form-item>
             <el-form-item>
-                <el-button @click="mullock()" type="primary" class="button">锁定</el-button>
-            </el-form-item>
-            <el-form-item>
-                <el-button @click="mulunlock()" type="primary" class="button">解锁</el-button>
+                <el-button-group>
+                    <el-button @click="getTrick()">查看中招情况</el-button>
+                    <el-button @click="getTabledata()">获取全部数据</el-button>
+                </el-button-group>
             </el-form-item>
             <!-- <el-form-item>
                 <el-button type="primary" class="button">导入</el-button>
@@ -47,34 +53,72 @@
                         <el-button :icon="Search" @click="getSearchinfo()" />
                     </template>
                 </el-input>
+                <el-button :icon="Search" @click="getSearchinfo()">查询信息</el-button>
+                <el-button @click="clearFilter">清除筛选</el-button>
             </el-form-item>
-
-
-
         </el-form>
 
         <!-- Table信息列表：基于elementplus，table表格，表格内容为编号、状态、上次测试时间、创建日期、操作（修改、删除、测试、锁定、解锁） -->
         <el-table ref="multipleTableRef" :row-key="getRowKeys" @selection-change="handleSelectionChange"
-            :data="currentTableData" style="width: 100%" class="table">
-            <el-table-column fixed type="selection" :reserve-selection="true" />
-            <el-table-column fixed prop="id" label="ID" width="80"></el-table-column>
-            <el-table-column prop="username" label="用户名" width="80"></el-table-column>
-            <el-table-column prop="email" label="邮箱" width="180"></el-table-column>
-            <el-table-column prop="representativeID" label="对接人ID"></el-table-column>
-            <el-table-column prop="isfreezed" label="是否冻结"></el-table-column>
-            <el-table-column prop="islocked" label="是否锁定"></el-table-column>
-            <el-table-column prop="createdbyuid" label="创建者ID" width="180"></el-table-column>
-            <el-table-column prop="createtime" label="创建时间"></el-table-column>
-            <el-table-column prop="comments" label="备注"></el-table-column>
-            <el-table-column fixed="right" label="操作" width="450">
+            :data="currentTableData" :row-class-name="tableRowClassName" style="width: 100%" class="table">
+            <el-table-column fixed type="selection" :reserve-selection="true" width="30" />
+            <el-table-column label="ID" fixed prop="id" width="40" align="center" sortable></el-table-column>
+            <el-table-column label="用户名" prop="username" width="80" align="center"></el-table-column>
+            <el-table-column label="邮箱" prop="email" width="180" align="center"></el-table-column>
+            <el-table-column label="组织号" prop="orgid" align="center"></el-table-column>
+            <el-table-column label="职位" prop="position" align="center"></el-table-column>
+            <el-table-column label="客户代表ID" prop="representativeID" align="center"></el-table-column>
+            <el-table-column label="客户代表" prop="representativeusername" align="center"></el-table-column>
+            <el-table-column label="是否冻结" prop="isfreezed" width="100" align="center"
+                :filters="[{ text: '冻结', value: true }, { text: '正常', value: false },]" :filter-method="filterFre"
+                filter-placement="bottom-end">
                 <template #default="scope">
-                    <el-button type="primary" @click="handleDetail(scope.row.id)" size="small">查看</el-button>
-                    <el-button type="primary" @click="handleDelete(scope.row.id)" size="small">删除</el-button>
-                    <el-button type="primary" @click="handleEdit(scope.row.id)" size="small">修改</el-button>
-                    <el-button type="primary" @click="handleLock(scope.row.id)" size="small">锁定</el-button>
-                    <el-button type="primary" @click="handleUnlock(scope.row.id)" size="small">解锁</el-button>
-                    <el-button type="primary" @click="handleFreeze(scope.row.id)" size="small">冻结</el-button>
-                    <el-button type="primary" @click="handleUnfreeze(scope.row.id)" size="small">解冻</el-button>
+                    <el-tag :type="scope.row.isfreezed ? 'warning' : 'success'" disable-transitions>
+                        {{ scope.row.isfreezed ? '冻结' : '正常' }}
+                    </el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column label="是否锁定" prop="islocked" width="100" align="center"
+                :filters="[{ text: '锁定', value: true }, { text: '正常', value: false },]" :filter-method="filterLock"
+                filter-placement="bottom-end">
+                <template #default="scope">
+                    <el-tag :type="scope.row.islocked ? 'warning' : 'success'" disable-transitions>
+                        {{ scope.row.islocked ? '锁定' : '正常' }}
+                    </el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column label="电话号" prop="mobile" align="center"></el-table-column>
+            <el-table-column label="座机号" prop="telephone" align="center"></el-table-column>
+            <el-table-column label="微信号" prop="wechat_num" align="center"></el-table-column>
+            <el-table-column label="电报" prop="telecom_num" align="center"></el-table-column>
+            <el-table-column label="创建者ID" prop="createdbyuid" width="100" align="center" sortable></el-table-column>
+            <el-table-column label="创建者" prop="createusername" align="center"></el-table-column>
+            <el-table-column label="创建时间" prop="createtime" width="180" align="center" sortable></el-table-column>
+            <el-table-column label="冻结者ID" prop="freezedbyuid" align="center" sortable></el-table-column>
+            <el-table-column label="冻结者" prop="freezeusername" align="center"></el-table-column>
+            <el-table-column label="冻结时间" prop="freezetime" width="180" align="center" sortable></el-table-column>
+            <el-table-column label="锁定者ID" prop="lockedbyuid" align="center" sortable></el-table-column>
+            <el-table-column label="锁定者" prop="lockusername" align="center"></el-table-column>
+            <el-table-column label="锁定时间" prop="lockedtime" width="180" align="center" sortable></el-table-column>
+            <el-table-column label="修改者ID" prop="modifiedbyuid" align="center" sortable></el-table-column>
+            <el-table-column label="修改者" prop="modifyusername" align="center"></el-table-column>
+            <el-table-column label="修改时间" prop="modifiedtime" width="180" align="center" sortable></el-table-column>
+            <el-table-column label="备注" prop="comments" width="280" align="center" show-overflow-tooltip></el-table-column>
+            <el-table-column label="操作" fixed="right" width="280" align="center">
+                <template #default="scope">
+                    <!-- 这里查看中招情况 -->
+                    <el-button link type="primary" @click="handleDetail(scope.row.id)"
+                        :disabled="scope.row.islocked | scope.row.isfreezed ? true : false">查看</el-button>
+                    <el-button link type="primary" @click="handleDelete(scope.row.id)"
+                        :disabled="scope.row.islocked | scope.row.isfreezed ? true : false">删除</el-button>
+                    <el-button link type="primary" @click="handleEdit(scope.row.id)"
+                        :disabled="scope.row.islocked | scope.row.isfreezed ? true : false">修改</el-button>
+                    <el-button link type="primary"
+                        @click="scope.row.islocked ? handleUnlock(scope.row.id) : handleLock(scope.row.id)"
+                        :disabled="scope.row.isfreezed ? true : false">{{ scope.row.islocked ? '解锁' : '锁定' }}</el-button>
+                    <el-button link type="primary"
+                        @click="scope.row.isfreezed ? handleUnfreeze(scope.row.id) : handleFreeze(scope.row.id)"
+                        :disabled="scope.row.islocked ? true : false">{{ scope.row.isfreezed ? '解冻' : '冻结' }}</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -189,61 +233,132 @@
                         readonly></el-input>
                 </el-form-item>
             </el-form>
-        </el-dialog>
+            <!-- detail中招情况查看 -->
+            <el-dialog v-model="detaildialogVisible" title="用户中招信息">
+                <el-table :data="UserDetail" style="width: 100%" class="table">
+                    <el-table-column label="ID" fixed prop="id" width="40" align="center" sortable></el-table-column>
+                    <el-table-column label="用户ID" prop="taguid" width="80" align="center"></el-table-column>
+                    <el-table-column label="用户名" prop="username" align="center"></el-table-column>
+                    <el-table-column label="项目ID" prop="taskid" align="center"></el-table-column>
+                    <el-table-column label="项目名称" prop="taskname" align="center"></el-table-column>
+                    <el-table-column label="中招时间" prop="tricktime" align="center"></el-table-column>
+                    <el-table-column label="行为" prop="action" align="center"></el-table-column>
+                    <el-table-column label="输入内容" prop="inputContent" align="center"></el-table-column>
+                    <el-table-column label="微信号" prop="comments" align="center"></el-table-column>
+                </el-table>
+            </el-dialog>
 
-        <!-- edit修改弹框 -->
-        <el-dialog v-model="editdialogVisible" title="修改">
-            <el-form :model="editform" ref="editformref" label-width="80px" class="form">
-                <el-form-item label="用户名" prop="username">
-                    <el-input v-model="editform.username" placeholder="请输入用户名"></el-input>
-                </el-form-item>
-                <el-form-item label="邮箱" prop="email">
-                    <el-input v-model="editform.email" placeholder="请输入邮箱"></el-input>
-                </el-form-item>
-                <el-form-item label="系统角色" prop="representativeID">
-                    <el-input v-model="editform.representativeID" placeholder="请输入系统角色"></el-input>
-                </el-form-item>
-                <el-form-item label="职位" prop="position">
-                    <el-input v-model="editform.position" placeholder="请输入职位"></el-input>
-                </el-form-item>
-                <el-form-item label="组织号" prop="orgid">
-                    <el-input v-model="editform.orgid" placeholder="请输入组织号"></el-input>
-                </el-form-item>
-                <el-form-item label="备注" prop="comments">
-                    <el-input v-model="editform.comments" placeholder="请输入备注"></el-input>
-                </el-form-item>
-                <el-form-item label="手机" prop="mobile">
-                    <el-input v-model="editform.mobile" placeholder="请输入手机"></el-input>
-                </el-form-item>
-                <el-form-item label="座机" prop="telephone">
-                    <el-input v-model="editform.telephone" placeholder="请输入座机"></el-input>
-                </el-form-item>
-                <el-form-item label="微信" prop="wechat_num">
-                    <el-input v-model="editform.wechat_num" placeholder="请输入微信"></el-input>
-                </el-form-item>
-                <el-form-item label="电报" prop="telecom_num">
-                    <el-input v-model="editform.telecom_num" placeholder="请输入电报"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="submitEdit()">提交</el-button>
-                    <el-button @click="cancelEdit()">取消</el-button>
-                </el-form-item>
-            </el-form>
-        </el-dialog>
+            <!-- edit修改弹框 -->
+            <el-dialog v-model="editdialogVisible" title="修改">
+                <el-form :model="editform" ref="editformref" label-width="80px" class="form">
+                    <el-form-item label="用户名" prop="username">
+                        <el-input v-model="editform.username" placeholder="请输入用户名"></el-input>
+                    </el-form-item>
+                    <el-form-item label="邮箱" prop="email">
+                        <el-input v-model="editform.email" placeholder="请输入邮箱"></el-input>
+                    </el-form-item>
+                    <el-form-item label="系统角色" prop="representativeID">
+                        <el-input v-model="editform.representativeID" placeholder="请输入系统角色"></el-input>
+                    </el-form-item>
+                    <el-form-item label="职位" prop="position">
+                        <el-input v-model="editform.position" placeholder="请输入职位"></el-input>
+                    </el-form-item>
+                    <el-form-item label="组织号" prop="orgid">
+                        <el-input v-model="editform.orgid" placeholder="请输入组织号"></el-input>
+                    </el-form-item>
+                    <el-form-item label="备注" prop="comments">
+                        <el-input v-model="editform.comments" placeholder="请输入备注"></el-input>
+                    </el-form-item>
+                    <el-form-item label="手机" prop="mobile">
+                        <el-input v-model="editform.mobile" placeholder="请输入手机"></el-input>
+                    </el-form-item>
+                    <el-form-item label="座机" prop="telephone">
+                        <el-input v-model="editform.telephone" placeholder="请输入座机"></el-input>
+                    </el-form-item>
+                    <el-form-item label="微信" prop="wechat_num">
+                        <el-input v-model="editform.wechat_num" placeholder="请输入微信"></el-input>
+                    </el-form-item>
+                    <el-form-item label="电报" prop="telecom_num">
+                        <el-input v-model="editform.telecom_num" placeholder="请输入电报"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="submitEdit()">提交</el-button>
+                        <el-button @click="cancelEdit()">取消</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-dialog>
 
-        <!-- search查询弹框 -->
-        <el-dialog v-model="searchTableVisible" title="查询信息">
-            <el-table :data="searchData" class="table">
-                <el-table-column prop="id" label="id" width="80">
-                </el-table-column>
-                <el-table-column prop="username" label="姓名" width="80">
-                </el-table-column>
-                <el-table-column prop="email" label="邮箱" width="180">
-                </el-table-column>
-                <el-table-column prop="sysrole" label="角色" width="180">
-                </el-table-column>
-            </el-table>
-        </el-dialog>
+            <!-- search查询弹框 -->
+            <el-dialog v-model="searchTableVisible" title="查询信息">
+                <el-form :model="searchForm" :inline="true" ref="searchref" class="demo-form-inline">
+                    <el-form-item label="用户id" prop="id">
+                        <el-input v-model="searchForm.id"></el-input>
+                    </el-form-item>
+                    <el-form-item label="邮箱" prop="email">
+                        <el-input v-model="searchForm.email" placeholder="email"></el-input>
+                    </el-form-item>
+                    <el-form-item label="用户名:" prop="partial_name">
+                        <el-input v-model="searchForm.partial_name" placeholder="name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="手机" prop="mobile">
+                        <el-input v-model="searchForm.mobile" placeholder="mobile"></el-input>
+                    </el-form-item>
+                    <el-form-item label="组织号" prop="orgid">
+                        <el-input v-model="searchForm.orgid" placeholder="mobile"></el-input>
+                    </el-form-item>
+                    <el-form-item label="职位" prop="position">
+                        <el-input v-model="searchForm.position" placeholder="mobile"></el-input>
+                    </el-form-item>
+                    <el-form-item label="备注" prop="comments">
+                        <el-input v-model="searchForm.comments" placeholder="null"></el-input>
+                    </el-form-item>
+                    <el-form-item label="创建者ID" prop="createdbyuid">
+                        <el-input v-model="searchForm.createdbyuid" placeholder="null"></el-input>
+                    </el-form-item>
+                    <el-form-item label="创建时间" prop="createtime">
+                        <el-date-picker v-model="searchForm.createtime" type="datetime"
+                            placeholder="Select date and time" />
+                    </el-form-item>
+                    <el-form-item label="修改者ID" prop="modifiedbyuid">
+                        <el-input v-model="searchForm.modifiedbyuid" placeholder="null"></el-input>
+                    </el-form-item>
+                    <el-form-item label="修改时间" prop="modifiedtime">
+                        <el-date-picker v-model="searchForm.modifiedtime" type="datetime"
+                            placeholder="Select date and time" />
+                    </el-form-item>
+                    <el-divider />
+                    <el-form-item label="是否锁定" prop="status_lock">
+                        <el-select v-model="searchForm.status_lock" placeholder="Select" size="large">
+                            <el-option label="是" value=true />
+                            <el-option label="否" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="锁定者ID" prop="lockedbyuid">
+                        <el-input v-model="searchForm.lockedbyuid" placeholder="null"></el-input>
+                    </el-form-item>
+                    <el-form-item label="锁定时间" prop="lockedtime">
+                        <el-date-picker v-model="searchForm.lockedtime" type="datetime"
+                            placeholder="Select date and time" />
+                    </el-form-item>
+                    <el-form-item label="是否冻结" prop="status_freeze">
+                        <el-select v-model="searchForm.status_freeze" placeholder="Select" size="large">
+                            <el-option label="是" value=true />
+                            <el-option label="否" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="冻结者ID" prop="freezedbyuid">
+                        <el-input v-model="searchForm.freezedbyuid" placeholder="null"></el-input>
+                    </el-form-item>
+                    <el-form-item label="冻结时间" prop="freezetime">
+                        <el-date-picker v-model="searchForm.freezetime" type="datetime"
+                            placeholder="Select date and time" />
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="submitsearchForm()">查询</el-button>
+                        <el-button @click="cancelsearchForm()">重置</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-dialog>
     </div>
 </template>
 <script setup>
@@ -252,6 +367,7 @@ import axios from 'axios'
 import http from '../api/http'
 import { getAlluser, addtaguser, getAtaguser, tagEdit, tagopera, multagopera } from '../api/user'
 import { Search } from '@element-plus/icons-vue'
+import { InfoFilled } from '@element-plus/icons-vue'
 let currentPage = ref(1);
 let pageSize = ref(5);
 let total = ref(0);
@@ -276,29 +392,37 @@ const searchTableVisible = ref(false)
 // const ismod = ref(false)
 // table数据
 const tableData = ref([])
-const UserDetail = ref()
+const UserDetail = ref([])
 const searchData = ref([])
 const formref = ref(null)
 const editformref = ref(null)
+const searchref = ref(null)
 const add = () => {
     adddialogVisible.value = true;
 }
 const getTabledata = () => {
     // 获取列表table数据
-    // http.get('/user').then(res => {
-    //     tableData.value = res.data.data
-    // })
-    // axios({
-    //     method:'get',
-    //     // url: 'http://43.138.12.254:9005/user/',
-    //     url: '/api1/user/',
-    // })
     getAlluser().then(res => {
         console.log('get all user info list!', res.data)
         tableData.value = res.data.children
     })
 }
 getTabledata()
+const getTrick = () => {
+    detaildialogVisible.value = true
+    getTagTrick().then(res => {
+        console.log('get all trick info list!', res.data)
+        UserDetail.value = res.data.children
+    })
+}
+const tableRowClassName = ({ row, rowIndex }) => {
+    if (row.islocked === true) {
+        return 'warning-row'
+    } else if (row.isfreezed === true) {
+        return 'success-row'
+    }
+    return ''
+}
 // 表单
 const form = ref({
     email: '',
@@ -323,6 +447,26 @@ const editform = ref({
     telephone: '',
     wechat_num: '',
     telecom_num: '',
+})
+const searchForm = ref({
+    id: '',
+    partial_name: '',
+    email: '',
+    orgid: '',
+    position: '',
+    representativeID: '',
+    createtime: '',
+    createdbyuid: '',
+    mobile: '',
+    comments: '',
+    status_freeze: '',
+    lockedbyuid: '',
+    lockedtime: '',
+    status_lock: '',
+    freezedbyuid: '',
+    freezetime: '',
+    modifiedbyuid: '',
+    modifiedtime: ''
 })
 const rules = ref({
     username: [
@@ -399,6 +543,17 @@ const handleSelectionChange = (val) => {
     console.log(select_orderId.value);
     console.log(select_order_number.value)
     console.log(multipleSelection.value)
+}
+const filterFre = (value, row) => {
+    return row.isfreezed === value
+}
+const filterLock = (value, row) => {
+    return row.islocked === value
+}
+const clearFilter = () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    multipleTableRef.value.clearFilter()
 }
 // 列表单项操作、修改、查看
 // const detailrule = ref({
@@ -613,8 +768,6 @@ const mulunlock = () => {
     }
 }
 const getSearchinfo = () => {
-    console.log(searchselect.value)
-    console.log(searchinput.value)
     searchTableVisible.value = true
     try {
         axios({
@@ -637,6 +790,7 @@ const getSearchinfo = () => {
     } catch (error) {
         console('nop error!')
     }
+    searchTableVisible.value = false
 }
 </script>
 <style scoped>
@@ -653,5 +807,14 @@ const getSearchinfo = () => {
 
 .input-with-select .el-input-group__prepend {
     background-color: var(--el-fill-color-blank);
+}
+</style>
+<style>
+.el-table .warning-row {
+    --el-table-tr-bg-color: var(--el-color-warning-light-9);
+}
+
+.el-table .success-row {
+    --el-table-tr-bg-color: var(--el-color-success-light-9);
 }
 </style>
