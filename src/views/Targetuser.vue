@@ -2,7 +2,7 @@
     <div>
         <!-- 基于elementplus，标题模块，标题为人员管理 -->
         <div class="header">
-            <div class="title">人员管理</div>
+            <div class="title">被测用户管理</div>
         </div>
         <!-- Toolbar工具条：基于elementplus，form表单，inline模式，新增按钮、删除按钮、锁定按钮、解锁按钮、创建日期的时间选择器、存续状态的下拉选择框-->
         <el-form :inline="true" class="form">
@@ -35,7 +35,11 @@
             </el-form-item> -->
             <!-- 查询 to be -->
             <el-form-item>
-                <el-input v-model="searchinput" placeholder="Please input" class="input-with-select">
+                <el-input
+                    v-model="searchinput"
+                    placeholder="Please input"
+                    class="input-with-select"
+                >
                     <template #prepend>
                         <el-select v-model="searchselect" placeholder="Select" style="width: 115px">
                             <!-- <el-option label="id" value="id" /> -->
@@ -44,7 +48,7 @@
                         </el-select>
                     </template>
                     <template #append>
-                        <el-button :icon="Search" @click="getSearchinfo()" />
+                        <el-button :icon="Search" @click="getSearchinfo()"/>
                     </template>
                 </el-input>
             </el-form-item>
@@ -54,18 +58,18 @@
         </el-form>
 
         <!-- Table信息列表：基于elementplus，table表格，表格内容为编号、状态、上次测试时间、创建日期、操作（修改、删除、测试、锁定、解锁） -->
-        <el-table ref="multipleTableRef" :row-key="getRowKeys" @selection-change="handleSelectionChange"
-            :data="currentTableData" style="width: 100%" class="table">
-            <el-table-column type="selection" :reserve-selection="true" />
-            <el-table-column prop="id" label="id" width="80">
-            </el-table-column>
-            <el-table-column prop="username" label="姓名" width="80">
-            </el-table-column>
-            <el-table-column prop="email" label="邮箱" width="180">
-            </el-table-column>
-            <el-table-column prop="sysrole" label="角色" width="180">
-            </el-table-column>
-            <el-table-column label="操作">
+        <el-table ref="multipleTableRef" :row-key="getRowKeys" @selection-change="handleSelectionChange" :data="tableData" style="width: 100%" class="table">
+            <el-table-column fixed type="selection" :reserve-selection="true" />
+            <el-table-column fixed prop="id" label="ID" width="80"></el-table-column>
+            <el-table-column prop="username" label="用户名" width="80"></el-table-column>
+            <el-table-column prop="email" label="邮箱" width="180"></el-table-column>
+            <el-table-column prop="representativeID" label="对接人ID"></el-table-column>
+            <el-table-column prop="isfreezed" label="是否冻结"></el-table-column>
+            <el-table-column prop="islocked" label="是否锁定"></el-table-column>
+            <el-table-column prop="createdbyuid" label="创建者ID" width="180"></el-table-column>
+            <el-table-column prop="createtime" label="创建时间"></el-table-column>
+            <el-table-column prop="comments" label="备注"></el-table-column>
+            <el-table-column fixed="right" label="操作" width="450">
                 <template #default="scope">
                     <el-button type="primary" @click="handleDetail(scope.row.id)" size="small">查看</el-button>
                     <el-button type="primary" @click="handleDelete(scope.row.id)" size="small">删除</el-button>
@@ -79,8 +83,7 @@
         </el-table>
 
         <!-- 分页 -->
-        <el-pagination background layout="prev, pager, next" :total="total" :page-size="pageSize" class="pagination"
-            @current-change="handleCurrentChange" style="position: absolute;bottom: 4vh;"></el-pagination>
+        <el-pagination background layout="prev, pager, next" :total="100" class="pagination"></el-pagination>
 
         <!-- add新增弹框：基于elementplus弹框，内容为form表单，内容包含：单位名称的select、部门名称的select、用户名的input、邮箱的input、角色的input、用户密码的input、岗位类别的select、职位的input、手机的input、备注的input、下载的按钮、导入的按钮 -->
         <el-dialog v-model="adddialogVisible" title="新增">
@@ -91,58 +94,61 @@
                 <el-form-item label="邮箱" prop="email">
                     <el-input v-model="form.email" placeholder="请输入邮箱"></el-input>
                 </el-form-item>
+                <el-form-item label="对接人ID" prop="representativeID">
+                    <el-input v-model="form.representativeID" placeholder="请输入对接人ID"></el-input>
+                </el-form-item>
+                <el-form-item label="组织号" prop="orgid">
+                    <el-input v-model="form.orgid" placeholder="请输入组织号"></el-input>
+                </el-form-item>
+                <el-form-item label="职位" prop="position">
+                    <el-input v-model="form.position" placeholder="请输入职位"></el-input>
+                </el-form-item>
                 <el-form-item label="手机" prop="mobile">
                     <el-input v-model="form.mobile" placeholder="请输入手机"></el-input>
                 </el-form-item>
                 <el-form-item label="座机" prop="telephone">
                     <el-input v-model="form.telephone" placeholder="请输入座机"></el-input>
                 </el-form-item>
-                <el-form-item label="微信" prop="wechat_num">
-                    <el-input v-model="form.wechat_num" placeholder="请输入微信"></el-input>
+                <el-form-item label="微信号" prop="wechat_num">
+                    <el-input v-model="form.wechat_num" placeholder="put here!" readonly></el-input>
                 </el-form-item>
                 <el-form-item label="电报" prop="telecom_num">
                     <el-input v-model="form.telecom_num" placeholder="请输入电报"></el-input>
                 </el-form-item>
-                <el-form-item label="密码" prop="password">
-                    <el-input v-model="form.password" placeholder="请输入密码" type="password" show-password></el-input>
+                <el-form-item label="备注" prop="comments">
+                    <el-input v-model="form.comments" placeholder="请输入备注"></el-input>
                 </el-form-item>
-                <el-form-item label="系统角色" prop="sysrole">
-                    <el-input v-model="form.sysrole" placeholder="请输入系统角色"></el-input>
-                </el-form-item>
-                <el-form-item label="职位" prop="position">
-                    <el-input v-model="form.position" placeholder="请输入职位"></el-input>
-                </el-form-item>
-                <el-form-item label="组织号" prop="orgid">
-                    <el-input v-model="form.orgid" placeholder="请输入组织号"></el-input>
-                </el-form-item>
-                <!-- <el-form-item label="备注" prop="projectDescription">
-                    <el-input v-model="form.projectDescription" placeholder="请输入备注"></el-input>
-                </el-form-item> -->
                 <el-form-item>
                     <el-button type="primary" @click="submitForm()">提交</el-button>
                     <el-button @click="cancelForm()">取消</el-button>
                 </el-form-item>
-            </el-form>
-        </el-dialog>
+            </el-form>  
+        </el-dialog>    
 
-        <!-- detail查看弹框 -->
+        <!-- detail查看、修改弹框，通过readonly modable改变属性 -->
         <el-dialog v-model="detaildialogVisible" title="用户信息">
             <el-form :model="UserDetail">
                 <el-form-item label="用户id" prop="id">
-                    <el-input v-model="UserDetail.id" placeholder="put id here!" disabled></el-input>
+                    <el-input v-model="UserDetail.id" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="用户名:" prop="username">
                     <!-- <el-input v-model="UserDetail.username" placeholder="put name here!" readonly></el-input> -->
                     <el-input v-model="UserDetail.username" placeholder="put name here!" readonly></el-input>
                 </el-form-item>
-                <el-form-item label="系统角色" prop="sysrole">
-                    <el-input v-model="UserDetail.sysrole" placeholder="put here!" readonly></el-input>
+                <el-form-item label="邮箱" prop="email">
+                    <el-input v-model="UserDetail.email" placeholder="put here!" readonly></el-input>
                 </el-form-item>
                 <el-form-item label="组织号" prop="orgid">
                     <el-input v-model="UserDetail.orgid" placeholder="put here!" readonly></el-input>
                 </el-form-item>
-                <el-form-item label="邮箱" prop="email">
-                    <el-input v-model="UserDetail.email" placeholder="put here!" readonly></el-input>
+                <el-form-item label="创建者ID" prop="createdbyuid">
+                    <el-input v-model="UserDetail.sysrole" placeholder="put here!" readonly></el-input>
+                </el-form-item>
+                <el-form-item label="创建时间" prop="createtime">
+                    <el-input v-model="UserDetail.createtime" placeholder="put here!" readonly></el-input>
+                </el-form-item>
+                <el-form-item label="对接者ID" prop="representativeID">
+                    <el-input v-model="UserDetail.representativeID" placeholder="put here!" readonly></el-input>
                 </el-form-item>
                 <el-form-item label="电话号" prop="mobile">
                     <el-input v-model="UserDetail.mobile" placeholder="put here!" readonly></el-input>
@@ -156,9 +162,36 @@
                 <el-form-item label="电报" prop="telecom_num">
                     <el-input v-model="UserDetail.telecom_num" placeholder="put here!" readonly></el-input>
                 </el-form-item>
+                <el-form-item label="是否锁定" prop="islocked">
+                    <el-input v-model="UserDetail.islocked" placeholder="put here!" readonly></el-input>
+                </el-form-item>
+                <el-form-item label="锁定者ID" prop="lockedbyuid">
+                    <el-input v-model="UserDetail.lockedbyuid" placeholder="put here!" readonly></el-input>
+                </el-form-item>
+                <el-form-item label="锁定时间" prop="lockedtime">
+                    <el-input v-model="UserDetail.lockedtime" placeholder="put here!" readonly></el-input>
+                </el-form-item>
+                <el-form-item label="是否冻结" prop="isfreezed">
+                    <el-input v-model="UserDetail.isfreezed" placeholder="put here!" readonly></el-input>
+                </el-form-item>
+                <el-form-item label="冻结者ID" prop="freezedbyuid">
+                    <el-input v-model="UserDetail.freezedbyuid" placeholder="put here!" readonly></el-input>
+                </el-form-item>
+                <el-form-item label="冻结时间" prop="freezetime">
+                    <el-input v-model="UserDetail.freezetime" placeholder="put here!" readonly></el-input>
+                </el-form-item>
+                <el-form-item label="修改者ID" prop="modifiedbyuid">
+                    <el-input v-model="UserDetail.modifiedbyuid" placeholder="put here!" readonly></el-input>
+                </el-form-item>
+                <el-form-item label="修改时间" prop="modifiedtime">
+                    <el-input v-model="UserDetail.modifiedtime" placeholder="put here!" readonly></el-input>
+                </el-form-item>
+                <el-form-item label="备注" prop="comments">
+                    <el-input v-model="UserDetail.comments" placeholder="put here!" autosize type="textarea" readonly></el-input>
+                </el-form-item>
             </el-form>
         </el-dialog>
-
+          
         <!-- edit修改弹框 -->
         <el-dialog v-model="editdialogVisible" title="修改">
             <el-form :model="editform" ref="editformref" label-width="80px" class="form">
@@ -167,6 +200,18 @@
                 </el-form-item>
                 <el-form-item label="邮箱" prop="email">
                     <el-input v-model="editform.email" placeholder="请输入邮箱"></el-input>
+                </el-form-item>
+                <el-form-item label="系统角色" prop="representativeID">
+                    <el-input v-model="editform.representativeID" placeholder="请输入系统角色"></el-input>
+                </el-form-item>
+                <el-form-item label="职位" prop="position">
+                    <el-input v-model="editform.position" placeholder="请输入职位"></el-input>
+                </el-form-item>
+                <el-form-item label="组织号" prop="orgid">
+                    <el-input v-model="editform.orgid" placeholder="请输入组织号"></el-input>
+                </el-form-item>
+                <el-form-item label="备注" prop="comments">
+                    <el-input v-model="editform.comments" placeholder="请输入备注"></el-input>
                 </el-form-item>
                 <el-form-item label="手机" prop="mobile">
                     <el-input v-model="editform.mobile" placeholder="请输入手机"></el-input>
@@ -180,28 +225,13 @@
                 <el-form-item label="电报" prop="telecom_num">
                     <el-input v-model="editform.telecom_num" placeholder="请输入电报"></el-input>
                 </el-form-item>
-                <el-form-item label="密码" prop="password">
-                    <el-input v-model="editform.password" placeholder="请输入密码" type="password" show-password></el-input>
-                </el-form-item>
-                <el-form-item label="系统角色" prop="sysrole">
-                    <el-input v-model="editform.sysrole" placeholder="请输入系统角色"></el-input>
-                </el-form-item>
-                <el-form-item label="职位" prop="position">
-                    <el-input v-model="editform.position" placeholder="请输入职位"></el-input>
-                </el-form-item>
-                <el-form-item label="组织号" prop="orgid">
-                    <el-input v-model="editform.orgid" placeholder="请输入组织号"></el-input>
-                </el-form-item>
-                <!-- <el-form-item label="备注" prop="projectDescription">
-                    <el-input v-model="form.projectDescription" placeholder="请输入备注"></el-input>
-                </el-form-item> -->
                 <el-form-item>
                     <el-button type="primary" @click="submitEdit()">提交</el-button>
                     <el-button @click="cancelEdit()">取消</el-button>
                 </el-form-item>
-            </el-form>
+            </el-form>  
         </el-dialog>
-
+        
         <!-- search查询弹框 -->
         <el-dialog v-model="searchTableVisible" title="查询信息">
             <el-table :data="searchData" class="table">
@@ -218,33 +248,12 @@
     </div>
 </template>
 <script setup>
-import { ref, unref, onMounted } from 'vue'
+import { ref,unref } from 'vue'
 import axios from 'axios'
-import { getAlluser } from '../api/user'
+import http from '../api/http'
+import { getAlluser, addtaguser, getAtaguser, tagEdit, tagopera, multagopera} from '../api/user'
 import { Search } from '@element-plus/icons-vue'
-// import qs from 'qs'
-onMounted(async () => {
-    await getTabledata()
-    console.log(tableData.value)
-    getCurrentPageData(1)
-})
-let currentPage = ref(1);
-let pageSize = ref(3);
-let total = ref(0);
-let currentTableData = ref([])
-function getCurrentPageData(val) {
-    let begin = (val - 1) * pageSize.value;
-    let end = val * pageSize.value;
-    currentTableData.value = tableData.value.slice(
-        begin,
-        end
-    );
-    console.log(currentTableData.value);
-}
-function handleCurrentChange(val) {
-    getCurrentPageData(val);
-    currentPage.value = val;
-};
+
 const adddialogVisible = ref(false);
 const detaildialogVisible = ref(false);
 const editdialogVisible = ref(false);
@@ -259,47 +268,46 @@ const editformref = ref(null)
 const add = () => {
     adddialogVisible.value = true;
 }
-const getTabledata = async () => {
+const getTabledata = () => {
     // 获取列表table数据
     // http.get('/user').then(res => {
     //     tableData.value = res.data.data
     // })
-    await axios({
-        method: 'get',
-        // url: 'http://43.138.12.254:9005/user/',
-        url: 'http://172.16.113.158:5000/user/',
-    }).then(res => {
-        console.log('get all user info list!', res.data)
-        tableData.value = res.data.children;
-        total.value = tableData.value.length
+    // axios({
+    //     method:'get',
+    //     // url: 'http://43.138.12.254:9005/user/',
+    //     url: '/api1/user/',
+    // })
+    getAlluser().then(res => {
+        console.log('get all user info list!',res.data)
+        tableData.value=res.data.children
     })
-
 }
-
+getTabledata()
 // 表单
 const form = ref({
     email: '',
     mobile: '',
     telephone: '',
-    wechat_num: '',
+    representativeID: '',
     telecom_num: '',
+    wechat_num: '',
     username: '',
-    password: '',
-    sysrole: '',
-    orgid: 0,
+    comments: '',
+    orgid: '',
     position: '',
 })
 const editform = ref({
     email: '',
+    username: '',
+    comments: '',
+    representativeID: '',
+    orgid: 0,
+    position: '',
     mobile: '',
     telephone: '',
     wechat_num: '',
     telecom_num: '',
-    username: '',
-    password: '',
-    sysrole: '',
-    orgid: 0,
-    position: '',
 })
 const rules = ref({
     username: [
@@ -308,27 +316,12 @@ const rules = ref({
     email: [
         { required: true, message: '请输入邮箱地址', trigger: 'blur' }
     ],
-    mobile: [
-        { required: true, message: '请输入手机号', trigger: 'blur' }
+    representativeID: [
+        { required: true, message: '请输入对接人ID', trigger: 'blur' }
     ],
-    telephone: [
-        { required: true, message: '请输入座机号', trigger: 'blur' }
+    orgid: [
+        { required: true, message: '请输入所属组织', trigger: 'blur' }
     ],
-    wechat_num: [
-        { required: true, message: '请输入微信号', trigger: 'blur' }
-    ],
-    telecom_num: [
-        { required: true, message: '请输入电报号', trigger: 'blur' }
-    ],
-    password: [
-        { required: true, message: '请输入密码', trigger: 'blur' }
-    ],
-    sysrole: [
-        { required: true, message: '请输入系统角色', trigger: 'blur' }
-    ],
-    // orgid: [
-    //     { required: true, message: '请输入用户名称', trigger: 'blur' }
-    // ],
     position: [
         { required: true, message: '请输入职位', trigger: 'blur' }
     ],
@@ -338,31 +331,24 @@ const rules = ref({
 const submitForm = async () => {
     // need unref first !! then check otherwise error
     const refform = unref(formref)
-    if (!refform) return
-    try {
+    if(!refform) return
+    try{
         await refform.validate()
-        console.log('huhuhuuuu', form.value)
-        axios({
-            method: 'post',
-            url: 'http://172.16.113.158:5000/user/',
-            data: form.value,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(res => {
-            console.log('post new form success!', res.data)
+        console.log('huhuhuuuu',form.value)
+        addtaguser(form.value).then(res => {
+            console.log('post new form success!',res.data)
             alert(res.data.message)
             getTabledata()
             adddialogVisible.value = false
             refform.resetFields()
         })
     } catch (error) {
-        console.log('no! form add failed! ', form.value)
+        console.log('no! form add failed! ',form.value)
     }
 }
 const cancelForm = () => {
     // couldn't put reset in add()
-    if (formref) {
+    if(formref){
         const form = unref(formref)
         form.resetFields();
     }
@@ -411,132 +397,109 @@ const handleSelectionChange = (val) => {
 const handleDetail = (id) => {
     detaildialogVisible.value = true
     console.log(id)
-    UserDetail.value = tableData.value[id - 1]
+    getAtaguser(id).then(res => {
+        UserDetail.value=res.data
+    })
     console.log(UserDetail.value)
-    // try{
-    // axios({
-    //     method:'get',
-    //     url: 'http://172.16.113.158:5000/user/'+id,
-    // }).then(res => {
-    //     console.log('gotdetaul',res.data)
-    //     UserDetail.value = res.data
-    //     console.log(UserDetail.value)
-    // })
-    // } catch (error) {
-    //     console.log('aaaanooo')
-    // }
 }
 const submitEdit = () => {
     const refform = unref(editformref)
-    try {
+    try{
         console.log(editid.value)
         console.log(editform.value)
-        axios({
-            method: 'put',
-            url: 'http://172.16.113.158:5000/user/' + editid.value,
-            headers: {
-                Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNjg3MDUwMDEyLCJqdGkiOiJjNDIzOGM2ZS02MzY2LTRkNDktOTc1YS00NWExMWNhMjczMjYiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjoxLCJuYmYiOjE2ODcwNTAwMTIsImV4cCI6MTY4NzEzNjQxMn0.c5H8FlCs8p5NjGVYKJqf8vIvKRpzgqywPRCQ_qO6rb8'
-            },
-            data: editform.value
-        }).then(res => {
-            console.log('subchange', res.data)
+        tagEdit(editid.value,editform.value).then(res => {
+            console.log('subchange',res.data)
             refform.resetFields()
             getTabledata()
         }, err => {
             let _resp = err.response
-            switch (_resp.status) {
+            switch (_resp.status) { 
                 case 400:
                     alert('nonono!bad request in submit!')
             }
         })
         editdialogVisible.value = false
-    } catch (error) {
+    } catch(error) {
         console.log('error in edit submit!')
     }
 }
 const handleEdit = (id) => {
     editdialogVisible.value = true
     editid.value = id
-    editform.value.email = tableData.value[id - 1].email
-    editform.value.mobile = tableData.value[id - 1].mobile
-    editform.value.telephone = tableData.value[id - 1].telephone
-    editform.value.telecom_num = tableData.value[id - 1].telecom_num
-    editform.value.wechat_num = tableData.value[id - 1].wechat_num
-    editform.value.username = tableData.value[id - 1].username
-    editform.value.sysrole = tableData.value[id - 1].sysrole
-    editform.value.orgid = tableData.value[id - 1].orgid
-    console.log(editform.value)
+    getAtaguser(id).then(res => {
+        UserDetail.value = res.data
+        editform.value.email=UserDetail.value.email
+        editform.value.mobile=UserDetail.value.mobile
+        editform.value.telephone=UserDetail.value.telephone
+        editform.value.telecom_num=UserDetail.value.telecom_num
+        editform.value.wechat_num=UserDetail.value.wechat_num
+        editform.value.username=UserDetail.value.username
+        editform.value.representativeID=UserDetail.value.representativeID
+        editform.value.orgid=UserDetail.value.orgid
+        editform.value.position=UserDetail.value.position
+        editform,value.comments=UserDetail.value.comments
+        console.log(editform.value)
+    })
 
     // ismod.value = true
     // console.log(ismod.value)
 }
 const cancelEdit = () => {
-    if (editformref) {
+    if(editformref){
         const form = unref(editformref)
         form.resetFields();
     }
     editdialogVisible.value = false
 }
 const handleDelete = (id) => {
-    axios({
-        method: 'patch',
-        url: 'http://172.16.113.158:5000/user/actionforauser/' + id,
-        data: { "operate": "delete" }
-    }).then(res => {
+    // axios({
+    //     method:'patch',
+    //     url: 'http://172.16.113.158:5000/user/actionforauser/'+id,
+    //     data: {"operate": "delete"}
+    // })
+    tagopera(id, "delete").then(res => {
         console.log(res.data)
         alert('删除成功！')
         getTabledata()
     }, err => {
         let _resp = err.response
-        switch (_resp.status) {
+        switch (_resp.status) { 
             case 400:
                 alert('nonono!bad request in delete!')
         }
     })
 }
 const handleLock = (id) => {
-    axios({
-        method: 'patch',
-        url: 'http://172.16.113.158:5000/user/actionforauser/' + id,
-        data: { "operate": "lock" }
-    }).then(res => {
+    tagopera(id, "lock").then(res => {
         console.log(res.data)
         alert('已锁定！')
+        getTabledata()
     }, err => {
         let _resp = err.response
-        switch (_resp.status) {
+        switch (_resp.status) { 
             case 400:
                 alert('nonono!bad request in lock!')
         }
     })
 }
 const handleUnlock = (id) => {
-    axios({
-        method: 'patch',
-        url: 'http://172.16.113.158:5000/user/actionforauser/' + id,
-        data: { "operate": "unlock" }
-    }).then(res => {
+    tagopera(id, "unlock").then(res => {
         console.log(res.data)
         alert('已解锁！')
+        getTabledata()
     })
 }
 const handleFreeze = (id) => {
-    axios({
-        method: 'patch',
-        url: 'http://172.16.113.158:5000/user/actionforauser/' + id,
-        data: { "operate": "freeze" }
-    }).then(res => {
+    tagopera(id, "freeze").then(res => {
         console.log(res.data)
+        getTabledata()
         alert('已冻结！')
     })
 }
 const handleUnfreeze = (id) => {
-    axios({
-        method: 'patch',
-        url: 'http://172.16.113.158:5000/user/actionforauser/' + id,
-        data: { "operate": "unfreeze" }
-    }).then(res => {
+    tagopera(id, "unfreeze").then(res => {
         console.log(res.data)
+        getTabledata()
         alert('已解冻！')
     })
 }
@@ -544,12 +507,13 @@ const handleUnfreeze = (id) => {
 const muldel = () => {
     console.log(multipleSelection.value)
     console.log(select_orderId.value)
-    try {
-        axios({
-            method: 'patch',
-            url: 'http://172.16.113.158:5000/user/action/delete',
-            data: { "data": select_orderId.value }
-        }).then(res => {
+    try{
+        // axios({
+        //     method:'patch',
+        //     url: 'http://172.16.113.158:5000/user/action/delete',
+        //     data: {"data": select_orderId.value}
+        // })
+        multagopera("delete", select_orderId.value).then(res => {
             console.log(res.data)
             multipleTableRef.value.clearSelection()
             console.log(select_orderId.value);
@@ -558,7 +522,7 @@ const muldel = () => {
             getTabledata()
         })
     } catch (error) {
-        console('muldel error!')
+        console.log('muldel error!')
     }
     // axios({
     //     method:'post',
@@ -581,92 +545,76 @@ const muldel = () => {
 }
 const mulfro = () => {
     console.log(multipleSelection.value)
-    try {
-        axios({
-            method: 'patch',
-            url: 'http://172.16.113.158:5000/user/action/freeze',
-            data: { "data": select_orderId.value }
-        }).then(res => {
+    try{
+        multagopera("freeze", select_orderId.value).then(res => {
             console.log(res.data)
             multipleTableRef.value.clearSelection()
             getTabledata()
         })
     } catch (error) {
-        console('mulfre error!')
+        console.log('mulfre error!')
     }
 }
 const mulunfro = () => {
     console.log(multipleSelection.value)
-    try {
-        axios({
-            method: 'patch',
-            url: 'http://172.16.113.158:5000/user/action/unfreeze',
-            data: { "data": select_orderId.value }
-        }).then(res => {
+    try{
+        multagopera("unfreeze", select_orderId.value).then(res => {
             console.log(res.data)
             multipleTableRef.value.clearSelection()
             getTabledata()
         })
     } catch (error) {
-        console('mulunfrezz error!')
+        console.log('mulunfrezz error!')
     }
 }
 const mullock = () => {
     console.log(multipleSelection.value)
-    try {
-        axios({
-            method: 'patch',
-            url: 'http://172.16.113.158:5000/user/action/lock',
-            data: { "data": select_orderId.value }
-        }).then(res => {
+    try{
+        multagopera("lock", select_orderId.value).then(res => {
             console.log(res.data)
             multipleTableRef.value.clearSelection()
             getTabledata()
         })
     } catch (error) {
-        console('mullock error!')
+        console.log('mullock error!')
     }
 }
 const mulunlock = () => {
     console.log(multipleSelection.value)
-    try {
-        axios({
-            method: 'patch',
-            url: 'http://172.16.113.158:5000/user/action/unlock',
-            data: { "data": select_orderId.value }
-        }).then(res => {
+    try{
+        multagopera("unlock", select_orderId.value).then(res => {
             console.log(res.data)
             multipleTableRef.value.clearSelection()
             getTabledata()
         }, err => {
             let _resp = err.response
-            switch (_resp.status) {
+            switch (_resp.status) { 
                 case 400:
                     alert('nonono!bad request in unlock!')
             }
         })
     } catch (error) {
-        console('mulunlock error!')
+        console.log('mulunlock error!')
     }
 }
 const getSearchinfo = () => {
     console.log(searchselect.value)
     console.log(searchinput.value)
     searchTableVisible.value = true
-    try {
+    try{
         axios({
-            method: 'post',
+            method:'post',
             url: 'http://172.16.113.158:5000/user/search',
             headers: {
                 Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNjg2NzI4NTU4LCJqdGkiOiI4MWRlZjQxOS1kNjE2LTQ5YjMtODY1Zi0zMzFhZjM4MGIxZGEiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjoxLCJuYmYiOjE2ODY3Mjg1NTgsImV4cCI6MTY4NjgxNDk1OH0.eVl9VxLaLE1ayHXd9qEQuML7luT5sZgewSf3ghVgsdo'
             },
-            data: { "sysrole": searchinput.value }
+            data: {"sysrole": searchinput.value}
         }).then(res => {
             console.log(res.data)
             searchData.value = res.data.children
         }, err => {
             let _resp = err.response
-            switch (_resp.status) {
+            switch (_resp.status) { 
                 case 400:
                     alert('nonono!bad req!')
             }
@@ -687,7 +635,6 @@ const getSearchinfo = () => {
 .el-table {
     margin-bottom: 20px;
 }
-
 .input-with-select .el-input-group__prepend {
     background-color: var(--el-fill-color-blank);
 }
