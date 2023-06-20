@@ -41,27 +41,14 @@
             </el-form-item> -->
             <!-- 查询 to be -->
             <el-form-item>
-                <el-input v-model="searchinput" placeholder="Please input" class="input-with-select">
-                    <template #prepend>
-                        <el-select v-model="searchselect" placeholder="Select" style="width: 115px">
-                            <!-- <el-option label="id" value="id" /> -->
-                            <el-option label="sysrole" value="sysrole" />
-                            <!-- <el-option label="orgid" value="orgid" /> -->
-                        </el-select>
-                    </template>
-                    <template #append>
-                        <el-button :icon="Search" @click="getSearchinfo()" />
-                    </template>
-                </el-input>
                 <el-button :icon="Search" @click="getSearchinfo()">查询信息</el-button>
                 <el-button @click="clearFilter">清除筛选</el-button>
             </el-form-item>
         </el-form>
 
         <!-- Table信息列表：基于elementplus，table表格，表格内容为编号、状态、上次测试时间、创建日期、操作（修改、删除、测试、锁定、解锁） -->
-        <el-table ref="multipleTableRef" :row-key="getRowKeys" @selection-change="handleSelectionChange"
-            :data="currentTableData" :row-class-name="tableRowClassName" style="width: 100%" class="table">
-            <el-table-column fixed type="selection" :reserve-selection="true" width="30" />
+        <el-table ref="multipleTableRef" :row-key="getRowKeys" @selection-change="handleSelectionChange" :data="tableData" :row-class-name="tableRowClassName" style="width: 100%" class="table">
+            <el-table-column fixed type="selection" :reserve-selection="true" width="30"/>
             <el-table-column label="ID" fixed prop="id" width="40" align="center" sortable></el-table-column>
             <el-table-column label="用户名" prop="username" width="80" align="center"></el-table-column>
             <el-table-column label="邮箱" prop="email" width="180" align="center"></el-table-column>
@@ -69,21 +56,17 @@
             <el-table-column label="职位" prop="position" align="center"></el-table-column>
             <el-table-column label="客户代表ID" prop="representativeID" align="center"></el-table-column>
             <el-table-column label="客户代表" prop="representativeusername" align="center"></el-table-column>
-            <el-table-column label="是否冻结" prop="isfreezed" width="100" align="center"
-                :filters="[{ text: '冻结', value: true }, { text: '正常', value: false },]" :filter-method="filterFre"
-                filter-placement="bottom-end">
+            <el-table-column label="是否冻结" prop="isfreezed" width="100" align="center" :filters="[{ text: '冻结', value: true },{ text: '正常', value: false },]" :filter-method="filterFre" filter-placement="bottom-end">
                 <template #default="scope">
                     <el-tag :type="scope.row.isfreezed ? 'warning' : 'success'" disable-transitions>
-                        {{ scope.row.isfreezed ? '冻结' : '正常' }}
+                      {{ scope.row.isfreezed ? '冻结' : '正常' }}
                     </el-tag>
                 </template>
             </el-table-column>
-            <el-table-column label="是否锁定" prop="islocked" width="100" align="center"
-                :filters="[{ text: '锁定', value: true }, { text: '正常', value: false },]" :filter-method="filterLock"
-                filter-placement="bottom-end">
+            <el-table-column label="是否锁定" prop="islocked" width="100" align="center" :filters="[{ text: '锁定', value: true },{ text: '正常', value: false },]" :filter-method="filterLock" filter-placement="bottom-end">
                 <template #default="scope">
                     <el-tag :type="scope.row.islocked ? 'warning' : 'success'" disable-transitions>
-                        {{ scope.row.islocked ? '锁定' : '正常' }}
+                      {{ scope.row.islocked ? '锁定' : '正常' }}
                     </el-tag>
                 </template>
             </el-table-column>
@@ -107,25 +90,17 @@
             <el-table-column label="操作" fixed="right" width="280" align="center">
                 <template #default="scope">
                     <!-- 这里查看中招情况 -->
-                    <el-button link type="primary" @click="handleDetail(scope.row.id)"
-                        :disabled="scope.row.islocked | scope.row.isfreezed ? true : false">查看</el-button>
-                    <el-button link type="primary" @click="handleDelete(scope.row.id)"
-                        :disabled="scope.row.islocked | scope.row.isfreezed ? true : false">删除</el-button>
-                    <el-button link type="primary" @click="handleEdit(scope.row.id)"
-                        :disabled="scope.row.islocked | scope.row.isfreezed ? true : false">修改</el-button>
-                    <el-button link type="primary"
-                        @click="scope.row.islocked ? handleUnlock(scope.row.id) : handleLock(scope.row.id)"
-                        :disabled="scope.row.isfreezed ? true : false">{{ scope.row.islocked ? '解锁' : '锁定' }}</el-button>
-                    <el-button link type="primary"
-                        @click="scope.row.isfreezed ? handleUnfreeze(scope.row.id) : handleFreeze(scope.row.id)"
-                        :disabled="scope.row.islocked ? true : false">{{ scope.row.isfreezed ? '解冻' : '冻结' }}</el-button>
+                    <el-button link type="primary" @click="handleDetail(scope.row.id)" :disabled="scope.row.islocked|scope.row.isfreezed ? true: false">查看</el-button>
+                    <el-button link type="primary" @click="handleDelete(scope.row.id)" :disabled="scope.row.islocked|scope.row.isfreezed ? true: false">删除</el-button>
+                    <el-button link type="primary" @click="handleEdit(scope.row.id)" :disabled="scope.row.islocked|scope.row.isfreezed ? true: false">修改</el-button>
+                    <el-button link type="primary" @click="scope.row.islocked ? handleUnlock(scope.row.id) : handleLock(scope.row.id)" :disabled="scope.row.isfreezed ? true: false">{{ scope.row.islocked ? '解锁' : '锁定' }}</el-button>
+                    <el-button link type="primary" @click="scope.row.isfreezed ? handleUnfreeze(scope.row.id) : handleFreeze(scope.row.id)" :disabled="scope.row.islocked ? true: false">{{ scope.row.isfreezed ? '解冻' : '冻结' }}</el-button>
                 </template>
             </el-table-column>
         </el-table>
 
         <!-- 分页 -->
-        <el-pagination background layout="prev, pager, next" :total="total" :page-size="pageSize" class="pagination"
-            @current-change="handleCurrentChange" style="position: absolute;bottom: 4vh;"></el-pagination>
+        <el-pagination background layout="prev, pager, next" :total="100" class="pagination"></el-pagination>
 
         <!-- add新增弹框：基于elementplus弹框，内容为form表单，内容包含：单位名称的select、部门名称的select、用户名的input、邮箱的input、角色的input、用户密码的input、岗位类别的select、职位的input、手机的input、备注的input、下载的按钮、导入的按钮 -->
         <el-dialog v-model="adddialogVisible" title="新增">
@@ -164,76 +139,9 @@
                     <el-button type="primary" @click="submitForm()">提交</el-button>
                     <el-button @click="cancelForm()">取消</el-button>
                 </el-form-item>
-            </el-form>
-        </el-dialog>
+            </el-form>  
+        </el-dialog>    
 
-        <!-- detail查看、修改弹框，通过readonly modable改变属性 -->
-        <el-dialog v-model="detaildialogVisible" title="用户信息">
-            <el-form :model="UserDetail">
-                <el-form-item label="用户id" prop="id">
-                    <el-input v-model="UserDetail.id" disabled></el-input>
-                </el-form-item>
-                <el-form-item label="用户名:" prop="username">
-                    <!-- <el-input v-model="UserDetail.username" placeholder="put name here!" readonly></el-input> -->
-                    <el-input v-model="UserDetail.username" placeholder="put name here!" readonly></el-input>
-                </el-form-item>
-                <el-form-item label="邮箱" prop="email">
-                    <el-input v-model="UserDetail.email" placeholder="put here!" readonly></el-input>
-                </el-form-item>
-                <el-form-item label="组织号" prop="orgid">
-                    <el-input v-model="UserDetail.orgid" placeholder="put here!" readonly></el-input>
-                </el-form-item>
-                <el-form-item label="创建者ID" prop="createdbyuid">
-                    <el-input v-model="UserDetail.sysrole" placeholder="put here!" readonly></el-input>
-                </el-form-item>
-                <el-form-item label="创建时间" prop="createtime">
-                    <el-input v-model="UserDetail.createtime" placeholder="put here!" readonly></el-input>
-                </el-form-item>
-                <el-form-item label="对接者ID" prop="representativeID">
-                    <el-input v-model="UserDetail.representativeID" placeholder="put here!" readonly></el-input>
-                </el-form-item>
-                <el-form-item label="电话号" prop="mobile">
-                    <el-input v-model="UserDetail.mobile" placeholder="put here!" readonly></el-input>
-                </el-form-item>
-                <el-form-item label="座机号" prop="telephone">
-                    <el-input v-model="UserDetail.telephone" placeholder="put here!" readonly></el-input>
-                </el-form-item>
-                <el-form-item label="微信号" prop="wechat_num">
-                    <el-input v-model="UserDetail.wechat_num" placeholder="put here!" readonly></el-input>
-                </el-form-item>
-                <el-form-item label="电报" prop="telecom_num">
-                    <el-input v-model="UserDetail.telecom_num" placeholder="put here!" readonly></el-input>
-                </el-form-item>
-                <el-form-item label="是否锁定" prop="islocked">
-                    <el-input v-model="UserDetail.islocked" placeholder="put here!" readonly></el-input>
-                </el-form-item>
-                <el-form-item label="锁定者ID" prop="lockedbyuid">
-                    <el-input v-model="UserDetail.lockedbyuid" placeholder="put here!" readonly></el-input>
-                </el-form-item>
-                <el-form-item label="锁定时间" prop="lockedtime">
-                    <el-input v-model="UserDetail.lockedtime" placeholder="put here!" readonly></el-input>
-                </el-form-item>
-                <el-form-item label="是否冻结" prop="isfreezed">
-                    <el-input v-model="UserDetail.isfreezed" placeholder="put here!" readonly></el-input>
-                </el-form-item>
-                <el-form-item label="冻结者ID" prop="freezedbyuid">
-                    <el-input v-model="UserDetail.freezedbyuid" placeholder="put here!" readonly></el-input>
-                </el-form-item>
-                <el-form-item label="冻结时间" prop="freezetime">
-                    <el-input v-model="UserDetail.freezetime" placeholder="put here!" readonly></el-input>
-                </el-form-item>
-                <el-form-item label="修改者ID" prop="modifiedbyuid">
-                    <el-input v-model="UserDetail.modifiedbyuid" placeholder="put here!" readonly></el-input>
-                </el-form-item>
-                <el-form-item label="修改时间" prop="modifiedtime">
-                    <el-input v-model="UserDetail.modifiedtime" placeholder="put here!" readonly></el-input>
-                </el-form-item>
-                <el-form-item label="备注" prop="comments">
-                    <el-input v-model="UserDetail.comments" placeholder="put here!" autosize type="textarea"
-                        readonly></el-input>
-                </el-form-item>
-            </el-form>
-        </el-dialog>
         <!-- detail中招情况查看 -->
         <el-dialog v-model="detaildialogVisible" title="用户中招信息">
             <el-table :data="UserDetail" style="width: 100%" class="table">
@@ -248,7 +156,7 @@
                 <el-table-column label="微信号" prop="comments" align="center"></el-table-column>
             </el-table>
         </el-dialog>
-
+          
         <!-- edit修改弹框 -->
         <el-dialog v-model="editdialogVisible" title="修改">
             <el-form :model="editform" ref="editformref" label-width="80px" class="form">
@@ -286,9 +194,9 @@
                     <el-button type="primary" @click="submitEdit()">提交</el-button>
                     <el-button @click="cancelEdit()">取消</el-button>
                 </el-form-item>
-            </el-form>
+            </el-form>  
         </el-dialog>
-
+        
         <!-- search查询弹框 -->
         <el-dialog v-model="searchTableVisible" title="查询信息">
             <el-form :model="searchForm" :inline="true" ref="searchref" class="demo-form-inline">
@@ -317,38 +225,54 @@
                     <el-input v-model="searchForm.createdbyuid" placeholder="null"></el-input>
                 </el-form-item>
                 <el-form-item label="创建时间" prop="createtime">
-                    <el-date-picker v-model="searchForm.createtime" type="datetime" placeholder="Select date and time" />
+                    <el-date-picker
+                        v-model="searchForm.createtime"
+                        type="datetime"
+                        placeholder="Select date and time"
+                    />
                 </el-form-item>
                 <el-form-item label="修改者ID" prop="modifiedbyuid">
                     <el-input v-model="searchForm.modifiedbyuid" placeholder="null"></el-input>
                 </el-form-item>
                 <el-form-item label="修改时间" prop="modifiedtime">
-                    <el-date-picker v-model="searchForm.modifiedtime" type="datetime" placeholder="Select date and time" />
+                    <el-date-picker
+                        v-model="searchForm.modifiedtime"
+                        type="datetime"
+                        placeholder="Select date and time"
+                    />
                 </el-form-item>
                 <el-divider />
                 <el-form-item label="是否锁定" prop="status_lock">
                     <el-select v-model="searchForm.status_lock" placeholder="Select" size="large">
                         <el-option label="是" value=true />
-                        <el-option label="否" />
+                        <el-option label="否"/>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="锁定者ID" prop="lockedbyuid">
                     <el-input v-model="searchForm.lockedbyuid" placeholder="null"></el-input>
                 </el-form-item>
                 <el-form-item label="锁定时间" prop="lockedtime">
-                    <el-date-picker v-model="searchForm.lockedtime" type="datetime" placeholder="Select date and time" />
+                    <el-date-picker
+                        v-model="searchForm.lockedtime"
+                        type="datetime"
+                        placeholder="Select date and time"
+                    />
                 </el-form-item>
                 <el-form-item label="是否冻结" prop="status_freeze">
                     <el-select v-model="searchForm.status_freeze" placeholder="Select" size="large">
                         <el-option label="是" value=true />
-                        <el-option label="否" />
+                        <el-option label="否"/>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="冻结者ID" prop="freezedbyuid">
                     <el-input v-model="searchForm.freezedbyuid" placeholder="null"></el-input>
                 </el-form-item>
                 <el-form-item label="冻结时间" prop="freezetime">
-                    <el-date-picker v-model="searchForm.freezetime" type="datetime" placeholder="Select date and time" />
+                    <el-date-picker
+                        v-model="searchForm.freezetime"
+                        type="datetime"
+                        placeholder="Select date and time"
+                    />
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="submitsearchForm()">查询</el-button>
@@ -359,29 +283,13 @@
     </div>
 </template>
 <script setup>
-import { ref, unref } from 'vue'
+import { ref,unref } from 'vue'
 import axios from 'axios'
 import http from '../api/http'
-import { getAlluser, addtaguser, getAtaguser, tagEdit, tagopera, multagopera } from '../api/user'
+import { getAlluser, addtaguser, getAtaguser, tagEdit, tagopera, multagopera,tagSearch, getTagTrick,AuserTrick} from '../api/user'
 import { Search } from '@element-plus/icons-vue'
 import { InfoFilled } from '@element-plus/icons-vue'
-let currentPage = ref(1);
-let pageSize = ref(5);
-let total = ref(0);
-let currentTableData = ref([])
-function getCurrentPageData(val) {
-    let begin = (val - 1) * pageSize.value;
-    let end = val * pageSize.value;
-    currentTableData.value = tableData.value.slice(
-        begin,
-        end
-    );
-    console.log(currentTableData.value);
-}
-function handleCurrentChange(val) {
-    getCurrentPageData(val);
-    currentPage.value = val;
-};
+
 const adddialogVisible = ref(false);
 const detaildialogVisible = ref(false);
 const editdialogVisible = ref(false);
@@ -400,25 +308,25 @@ const add = () => {
 const getTabledata = () => {
     // 获取列表table数据
     getAlluser().then(res => {
-        console.log('get all user info list!', res.data)
-        tableData.value = res.data.children
+        console.log('get all user info list!',res.data)
+        tableData.value=res.data.children
     })
 }
 getTabledata()
 const getTrick = () => {
     detaildialogVisible.value = true
     getTagTrick().then(res => {
-        console.log('get all trick info list!', res.data)
-        UserDetail.value = res.data.children
+        console.log('get all trick info list!',res.data)
+        UserDetail.value=res.data.children
     })
 }
-const tableRowClassName = ({ row, rowIndex }) => {
-    if (row.islocked === true) {
-        return 'warning-row'
-    } else if (row.isfreezed === true) {
-        return 'success-row'
-    }
-    return ''
+const tableRowClassName = ({row,rowIndex}) => {
+  if (row.islocked === true) {
+    return 'warning-row'
+  } else if (row.isfreezed === true) {
+    return 'success-row'
+  }
+  return ''
 }
 // 表单
 const form = ref({
@@ -465,12 +373,25 @@ const searchForm = ref({
     modifiedbyuid: '',
     modifiedtime: ''
 })
+const checkEmail = (rule, value, callback) => {
+  const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+  if (!value) {
+    return callback(new Error("邮箱不能为空"));
+  }
+  setTimeout(() => {
+    if (mailReg.test(value)) {
+      callback();
+    } else {
+      callback(new Error("请输入正确的邮箱格式"));
+    }
+  }, 100);
+}
 const rules = ref({
     username: [
         { required: true, message: '请输入用户名称', trigger: 'blur' }
     ],
     email: [
-        { required: true, message: '请输入邮箱地址', trigger: 'blur' }
+        { required: true, validator: checkEmail, trigger: 'blur' }
     ],
     representativeID: [
         { required: true, message: '请输入对接人ID', trigger: 'blur' }
@@ -487,24 +408,24 @@ const rules = ref({
 const submitForm = async () => {
     // need unref first !! then check otherwise error
     const refform = unref(formref)
-    if (!refform) return
-    try {
+    if(!refform) return
+    try{
         await refform.validate()
-        console.log('huhuhuuuu', form.value)
+        console.log('huhuhuuuu',form.value)
         addtaguser(form.value).then(res => {
-            console.log('post new form success!', res.data)
+            console.log('post new form success!',res.data)
             alert(res.data.message)
             getTabledata()
             adddialogVisible.value = false
             refform.resetFields()
         })
     } catch (error) {
-        console.log('no! form add failed! ', form.value)
+        console.log('no! form add failed! ',form.value)
     }
 }
 const cancelForm = () => {
     // couldn't put reset in add()
-    if (formref) {
+    if(formref){
         const form = unref(formref)
         form.resetFields();
     }
@@ -542,15 +463,15 @@ const handleSelectionChange = (val) => {
     console.log(multipleSelection.value)
 }
 const filterFre = (value, row) => {
-    return row.isfreezed === value
+  return row.isfreezed === value
 }
 const filterLock = (value, row) => {
-    return row.islocked === value
+  return row.islocked === value
 }
 const clearFilter = () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    multipleTableRef.value.clearFilter()
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
+  multipleTableRef.value.clearFilter()
 }
 // 列表单项操作、修改、查看
 // const detailrule = ref({
@@ -564,29 +485,29 @@ const clearFilter = () => {
 const handleDetail = (id) => {
     detaildialogVisible.value = true
     console.log(id)
-    getAtaguser(id).then(res => {
-        UserDetail.value = res.data
+    AuserTrick(id).then(res => {
+        UserDetail.value=res.data
     })
     console.log(UserDetail.value)
 }
 const submitEdit = () => {
     const refform = unref(editformref)
-    try {
+    try{
         console.log(editid.value)
         console.log(editform.value)
-        tagEdit(editid.value, editform.value).then(res => {
-            console.log('subchange', res.data)
+        tagEdit(editid.value,editform.value).then(res => {
+            console.log('subchange',res.data)
             refform.resetFields()
             getTabledata()
         }, err => {
             let _resp = err.response
-            switch (_resp.status) {
+            switch (_resp.status) { 
                 case 400:
                     alert('nonono!bad request in submit!')
             }
         })
         editdialogVisible.value = false
-    } catch (error) {
+    } catch(error) {
         console.log('error in edit submit!')
     }
 }
@@ -595,16 +516,16 @@ const handleEdit = (id) => {
     editid.value = id
     getAtaguser(id).then(res => {
         UserDetail.value = res.data
-        editform.value.email = UserDetail.value.email
-        editform.value.mobile = UserDetail.value.mobile
-        editform.value.telephone = UserDetail.value.telephone
-        editform.value.telecom_num = UserDetail.value.telecom_num
-        editform.value.wechat_num = UserDetail.value.wechat_num
-        editform.value.username = UserDetail.value.username
-        editform.value.representativeID = UserDetail.value.representativeID
-        editform.value.orgid = UserDetail.value.orgid
-        editform.value.position = UserDetail.value.position
-        editform, value.comments = UserDetail.value.comments
+        editform.value.email=UserDetail.value.email
+        editform.value.mobile=UserDetail.value.mobile
+        editform.value.telephone=UserDetail.value.telephone
+        editform.value.telecom_num=UserDetail.value.telecom_num
+        editform.value.wechat_num=UserDetail.value.wechat_num
+        editform.value.username=UserDetail.value.username
+        editform.value.representativeID=UserDetail.value.representativeID
+        editform.value.orgid=UserDetail.value.orgid
+        editform.value.position=UserDetail.value.position
+        editform,value.comments=UserDetail.value.comments
         console.log(editform.value)
     })
 
@@ -612,7 +533,7 @@ const handleEdit = (id) => {
     // console.log(ismod.value)
 }
 const cancelEdit = () => {
-    if (editformref) {
+    if(editformref){
         const form = unref(editformref)
         form.resetFields();
     }
@@ -630,7 +551,7 @@ const handleDelete = (id) => {
         getTabledata()
     }, err => {
         let _resp = err.response
-        switch (_resp.status) {
+        switch (_resp.status) { 
             case 400:
                 alert('nonono!bad request in delete!')
         }
@@ -643,7 +564,7 @@ const handleLock = (id) => {
         getTabledata()
     }, err => {
         let _resp = err.response
-        switch (_resp.status) {
+        switch (_resp.status) { 
             case 400:
                 alert('nonono!bad request in lock!')
         }
@@ -674,7 +595,7 @@ const handleUnfreeze = (id) => {
 const muldel = () => {
     console.log(multipleSelection.value)
     console.log(select_orderId.value)
-    try {
+    try{
         // axios({
         //     method:'patch',
         //     url: 'http://172.16.113.158:5000/user/action/delete',
@@ -712,7 +633,7 @@ const muldel = () => {
 }
 const mulfro = () => {
     console.log(multipleSelection.value)
-    try {
+    try{
         multagopera("freeze", select_orderId.value).then(res => {
             console.log(res.data)
             multipleTableRef.value.clearSelection()
@@ -724,7 +645,7 @@ const mulfro = () => {
 }
 const mulunfro = () => {
     console.log(multipleSelection.value)
-    try {
+    try{
         multagopera("unfreeze", select_orderId.value).then(res => {
             console.log(res.data)
             multipleTableRef.value.clearSelection()
@@ -736,7 +657,7 @@ const mulunfro = () => {
 }
 const mullock = () => {
     console.log(multipleSelection.value)
-    try {
+    try{
         multagopera("lock", select_orderId.value).then(res => {
             console.log(res.data)
             multipleTableRef.value.clearSelection()
@@ -748,14 +669,14 @@ const mullock = () => {
 }
 const mulunlock = () => {
     console.log(multipleSelection.value)
-    try {
+    try{
         multagopera("unlock", select_orderId.value).then(res => {
             console.log(res.data)
             multipleTableRef.value.clearSelection()
             getTabledata()
         }, err => {
             let _resp = err.response
-            switch (_resp.status) {
+            switch (_resp.status) { 
                 case 400:
                     alert('nonono!bad request in unlock!')
             }
@@ -766,26 +687,20 @@ const mulunlock = () => {
 }
 const getSearchinfo = () => {
     searchTableVisible.value = true
-    try {
-        axios({
-            method: 'post',
-            url: 'http://172.16.113.158:5000/user/search',
-            headers: {
-                Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNjg2NzI4NTU4LCJqdGkiOiI4MWRlZjQxOS1kNjE2LTQ5YjMtODY1Zi0zMzFhZjM4MGIxZGEiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjoxLCJuYmYiOjE2ODY3Mjg1NTgsImV4cCI6MTY4NjgxNDk1OH0.eVl9VxLaLE1ayHXd9qEQuML7luT5sZgewSf3ghVgsdo'
-            },
-            data: { "sysrole": searchinput.value }
-        }).then(res => {
-            console.log(res.data)
-            searchData.value = res.data.children
-        }, err => {
-            let _resp = err.response
-            switch (_resp.status) {
-                case 400:
-                    alert('nonono!bad req!')
-            }
-        })
-    } catch (error) {
-        console('nop error!')
+}
+const submitsearchForm = () => {
+    console.log(searchForm.value)
+    tagSearch(searchForm.value).then(res => {
+        tableData.value = res.data.children
+        searchTableVisible.value= false
+    }, err => {
+        console.log(err)
+    })
+}
+const cancelsearchForm = () => {
+    if(searchref){
+        const form = unref(searchref)
+        form.resetFields();
     }
     searchTableVisible.value = false
 }
@@ -797,11 +712,9 @@ const getSearchinfo = () => {
     font-weight: bold;
     font-size: 20px;
 }
-
 .el-table {
     margin-bottom: 20px;
 }
-
 .input-with-select .el-input-group__prepend {
     background-color: var(--el-fill-color-blank);
 }
@@ -810,7 +723,6 @@ const getSearchinfo = () => {
 .el-table .warning-row {
     --el-table-tr-bg-color: var(--el-color-warning-light-9);
 }
-
 .el-table .success-row {
     --el-table-tr-bg-color: var(--el-color-success-light-9);
 }
