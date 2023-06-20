@@ -8,8 +8,8 @@ const HEADERS = {
 const http = axios.create({
   timeout: 3000,
   // 在利用http对象请求的路径前都会加上baseURL
-  baseURL: 'http://172.16.113.158:5000',
-  // baseURL: 'http://10.134.162.66:5000'
+  // baseURL: 'http://172.16.113.158:5000',
+  baseURL: 'http://10.134.162.66:5000',
   headers: HEADERS
 })
 
