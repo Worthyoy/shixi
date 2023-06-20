@@ -1,4 +1,5 @@
 <script setup>
+import http from '../api/http'
 import { ElContainer, ElHeader, ElAside, ElMenu, ElIcon, ElMenuItem, ElMain, vLoading, ElFooter } from 'element-plus'
 import { useRouter } from 'vue-router'
 import {
@@ -14,6 +15,14 @@ const admin = ref('admin')
 const toShow = () => {
     router.push('/show')
 }
+const logout = () => {
+    http.delete('/auth/logout').then(res => {
+        console.log('logout')
+        sessionStorage.removeItem('Authorization')
+        alert('已退出!')
+        router.push('/login')
+    })
+}
 </script>
 <template>
     <el-container class="home container">
@@ -23,7 +32,7 @@ const toShow = () => {
             <div style="float: right;">
                 <el-button type="text" style="padding-right: 40px;" @click="toShow">项目展示</el-button>
                 <span style="padding-right: 40px;color: #399;">{{ admin }}</span>
-                <el-button type="text">退出</el-button>
+                <el-button type="text" @click="logout">退出</el-button>
             </div>
         </el-header>
         <el-container class="container2">
