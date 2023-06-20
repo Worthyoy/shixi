@@ -1,33 +1,33 @@
 <template>
-    <el-form class="login" :model="form" label-width="120px">
-        <h2>Please sign in</h2>
-        <el-form-item label="账号">
-            <el-input v-model="form.name" />
-        </el-form-item>
-        <el-form-item label="密码">
-            <el-input v-model="form.region" />
-        </el-form-item>
-        <!-- 验证码 -->
-        <!-- <el-form-item label="验证码" class="s">
+    <div class="background">
+        <el-form class="login" :model="form" label-width="70px">
+            <h2 class="login_title">登录</h2>
+            <el-form-item label="账号">
+                <el-input v-model="form.name" />
+            </el-form-item>
+            <el-form-item label="密码">
+                <el-input v-model="form.region" />
+            </el-form-item>
+            <!-- 验证码 -->
+            <!-- <el-form-item label="验证码" class="s">
             <el-input v-model="form.date1" style="width: 418px;" /> -->
-        <!-- 点击可变的验证码图片 -->
-        <!-- <img width="60" height="30"
+            <!-- 点击可变的验证码图片 -->
+            <!-- <img width="60" height="30"
                 src="http://172.16.113.158:5000/auth/verify_code" alt="">
         </el-form-item> -->
-        <el-form-item label="验证码" class="s">
-            <el-input v-model="form.verify_code" style="width: 200px;" />
-            <!-- 点击可变的验证码图片 -->
-            <img :src="verifyCodeImgSrc" @click="refreshVerifyCode" />
-        </el-form-item>
-        <el-form-item id="btn_box">
-            <el-button style="width: 480px;" type="primary" @click="onSubmit">登录</el-button>
-        </el-form-item>
-        <el-form-item id="btn_box">
-            <el-button style="width: 480px;" type="primary" @click="signup">注册</el-button>
-        </el-form-item>
+            <el-form-item label="验证码" class="s">
+                <el-input v-model="form.verify_code" style="width: 160px;" />
+                <!-- 点击可变的验证码图片 -->
+                <img :src="verifyCodeImgSrc" @click="refreshVerifyCode" />
+            </el-form-item>
+            <el-form-item id="btn_box">
+                <el-button style="width: 100%;" type="primary" @click="onSubmit">登录</el-button>
+            </el-form-item>
 
 
-    </el-form>
+
+        </el-form>
+    </div>
 </template>
 <script setup>
 //引入el-form、el-form-item、el-input、el-button等组件
@@ -100,19 +100,26 @@ function signup() {
 <style scoped>
 .el-form {
     position: absolute;
-    left: 50%;
+    left: 15%;
     top: 50%;
-    margin-left: -300px;
+    margin-left: -200px;
     margin-top: -150px;
-    width: 600px;
+    width: 400px;
     height: 300px;
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
     padding: 10px 40px 0 0;
+    font-family: fangsong;
+    color: #282848;
 }
 
 .login .s {
     display: flex;
     justify-content: space-between;
+}
+
+.login .login_title {
+    font-size: 2rem;
+    margin-bottom: 10px;
 }
 
 .login h2 {
@@ -123,5 +130,17 @@ function signup() {
 
 #btn_box .el-form-item__content {
     flex-wrap: nowrap !important;
+}
+
+#btn_box {
+    margin-left: 35px, !important;
+}
+
+.background {
+    height: 100%;
+    width: 100%;
+    background-image: url('../img/Login.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 </style>

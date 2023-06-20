@@ -35,11 +35,7 @@
             </el-form-item> -->
             <!-- 查询 to be -->
             <el-form-item>
-                <el-input
-                    v-model="searchinput"
-                    placeholder="Please input"
-                    class="input-with-select"
-                >
+                <el-input v-model="searchinput" placeholder="Please input" class="input-with-select">
                     <template #prepend>
                         <el-select v-model="searchselect" placeholder="Select" style="width: 115px">
                             <!-- <el-option label="id" value="id" /> -->
@@ -48,7 +44,7 @@
                         </el-select>
                     </template>
                     <template #append>
-                        <el-button :icon="Search" @click="getSearchinfo()"/>
+                        <el-button :icon="Search" @click="getSearchinfo()" />
                     </template>
                 </el-input>
             </el-form-item>
@@ -58,7 +54,8 @@
         </el-form>
 
         <!-- Table信息列表：基于elementplus，table表格，表格内容为编号、状态、上次测试时间、创建日期、操作（修改、删除、测试、锁定、解锁） -->
-        <el-table ref="multipleTableRef" :row-key="getRowKeys" @selection-change="handleSelectionChange" :data="tableData" style="width: 100%" class="table">
+        <el-table ref="multipleTableRef" :row-key="getRowKeys" @selection-change="handleSelectionChange"
+            :data="currentTableData" style="width: 100%" class="table">
             <el-table-column fixed type="selection" :reserve-selection="true" />
             <el-table-column fixed prop="id" label="id" width="80"></el-table-column>
             <el-table-column prop="username" label="用户名" width="80"></el-table-column>
@@ -83,7 +80,8 @@
         </el-table>
 
         <!-- 分页 -->
-        <el-pagination background layout="prev, pager, next" :total="100" class="pagination"></el-pagination>
+        <el-pagination background layout="prev, pager, next" :total="total" :page-size="pageSize" class="pagination"
+            @current-change="handleCurrentChange" style="position: absolute;bottom: 4vh;"></el-pagination>
 
         <!-- add新增弹框：基于elementplus弹框，内容为form表单，内容包含：单位名称的select、部门名称的select、用户名的input、邮箱的input、角色的input、用户密码的input、岗位类别的select、职位的input、手机的input、备注的input、下载的按钮、导入的按钮 -->
         <el-dialog v-model="adddialogVisible" title="新增">
@@ -100,12 +98,7 @@
                 <el-form-item label="系统角色" prop="sysrole">
                     <!-- <el-input v-model="form.sysrole" placeholder="请输入系统角色"></el-input> -->
                     <el-select v-model="form.sysrole" placeholder="Select" size="large">
-                        <el-option
-                          v-for="item in roleOptions"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value"
-                        />
+                        <el-option v-for="item in roleOptions" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="手机" prop="mobile">
@@ -118,8 +111,8 @@
                     <el-button type="primary" @click="submitForm()">提交</el-button>
                     <el-button @click="cancelForm()">取消</el-button>
                 </el-form-item>
-            </el-form>  
-        </el-dialog>    
+            </el-form>
+        </el-dialog>
 
         <!-- detail查看弹框 -->
         <el-dialog v-model="detaildialogVisible" title="用户信息">
@@ -174,7 +167,7 @@
                 </el-form-item>
             </el-form>
         </el-dialog>
-          
+
         <!-- edit修改弹框 -->
         <el-dialog v-model="editdialogVisible" title="修改">
             <el-form :model="editform" ref="editformref" label-width="80px" class="form">
@@ -200,9 +193,9 @@
                     <el-button type="primary" @click="submitEdit()">提交</el-button>
                     <el-button @click="cancelEdit()">取消</el-button>
                 </el-form-item>
-            </el-form>  
+            </el-form>
         </el-dialog>
-        
+
         <!-- search查询弹框 -->
         <el-dialog v-model="searchTableVisible" title="查询信息">
             <el-table :data="searchData" class="table">
@@ -219,11 +212,28 @@
     </div>
 </template>
 <script setup>
-import { ref,unref } from 'vue'
+import { ref, unref } from 'vue'
 // import axios from 'axios'
 import http from '../api/http'
 import { getdata, addNew, getAsysuser, sysEdit, Opera, mulOpera, sysSearch } from '../api/user'
 import { Search } from '@element-plus/icons-vue'
+let currentPage = ref(1);
+let pageSize = ref(5);
+let total = ref(0);
+let currentTableData = ref([])
+function getCurrentPageData(val) {
+    let begin = (val - 1) * pageSize.value;
+    let end = val * pageSize.value;
+    currentTableData.value = tableData.value.slice(
+        begin,
+        end
+    );
+    console.log(currentTableData.value);
+}
+function handleCurrentChange(val) {
+    getCurrentPageData(val);
+    currentPage.value = val;
+};
 // let role=sessionStorage.getItem('')
 // import qs from 'qs'
 const adddialogVisible = ref(false);
@@ -241,13 +251,13 @@ const add = () => {
     adddialogVisible.value = true;
 }
 // const getTabledata = () => {
-    // 获取列表table数据
-    // http.get('/user').then(res => {
-    //     tableData.value = res.data.data
-    // })
-    // axios({
-        // method:'get',
-        // url: 'http://43.138.12.254:9005/user/',
+// 获取列表table数据
+// http.get('/user').then(res => {
+//     tableData.value = res.data.data
+// })
+// axios({
+// method:'get',
+// url: 'http://43.138.12.254:9005/user/',
 //         url: '/api/sysuser/',
 //     }).then(res => {
 //         console.log('get all user info list!',res.data)
@@ -256,8 +266,8 @@ const add = () => {
 // }
 const getTabledata = () => {
     getdata().then(res => {
-        console.log('get all user info list!',res.data)
-        tableData.value=res.data.children
+        console.log('get all user info list!', res.data)
+        tableData.value = res.data.children
     })
 }
 getTabledata()
@@ -314,10 +324,10 @@ const roleOptions = [
 const submitForm = async () => {
     // need unref first !! then check otherwise error
     const refform = unref(formref)
-    if(!refform) return
-    try{
+    if (!refform) return
+    try {
         await refform.validate()
-        console.log('huhuhuuuu',form.value)
+        console.log('huhuhuuuu', form.value)
         // 1.http({
         //     method:'post',
         //     url: '/sysuser/',
@@ -325,19 +335,19 @@ const submitForm = async () => {
         // })
         // 2.http.post('/sysuser/',form.value)
         addNew(form.value).then(res => {
-            console.log('post new form success!',res.data)
+            console.log('post new form success!', res.data)
             alert(res.data.message)
             getTabledata()
             adddialogVisible.value = false
             refform.resetFields()
         })
     } catch (error) {
-        console.log('no! form add failed! ',error)
+        console.log('no! form add failed! ', error)
     }
 }
 const cancelForm = () => {
     // couldn't put reset in add()
-    if(formref){
+    if (formref) {
         const form = unref(formref)
         form.resetFields();
     }
@@ -387,7 +397,7 @@ const handleDetail = (id) => {
     detaildialogVisible.value = true
     console.log(id)
     getAsysuser(id).then(res => {
-        UserDetail.value=res.data
+        UserDetail.value = res.data
     })
     console.log(UserDetail.value)
     // try{
@@ -405,7 +415,7 @@ const handleDetail = (id) => {
 }
 const submitEdit = () => {
     const refform = unref(editformref)
-    try{
+    try {
         console.log(editid.value)
         console.log(editform.value)
         // http({
@@ -413,19 +423,19 @@ const submitEdit = () => {
         //     url: '/sysuser/'+,
         //     data: 
         // })
-        sysEdit(editid.value,editform.value).then(res => {
-            console.log('subchange',res.data)
+        sysEdit(editid.value, editform.value).then(res => {
+            console.log('subchange', res.data)
             refform.resetFields()
             getTabledata()
         }, err => {
             let _resp = err.response
-            switch (_resp.status) { 
+            switch (_resp.status) {
                 case 400:
                     alert('nonono!bad request in submit!')
             }
         })
         editdialogVisible.value = false
-    } catch(error) {
+    } catch (error) {
         console.log('error in edit submit!')
     }
 }
@@ -433,20 +443,20 @@ const handleEdit = (id) => {
     editdialogVisible.value = true
     editid.value = id
     getAsysuser(id).then(res => {
-        UserDetail.value=res.data
-        editform.value.email=UserDetail.value.email
-        editform.value.mobile=UserDetail.value.mobile
-        editform.value.username=UserDetail.value.username
-        editform.value.sysrole=UserDetail.value.sysrole
+        UserDetail.value = res.data
+        editform.value.email = UserDetail.value.email
+        editform.value.mobile = UserDetail.value.mobile
+        editform.value.username = UserDetail.value.username
+        editform.value.sysrole = UserDetail.value.sysrole
         // editform.value.password=tableData.value[id-1].password
-        editform.value.comments=UserDetail.value.comments
+        editform.value.comments = UserDetail.value.comments
         console.log(editform.value)
     })
     // ismod.value = true
     // console.log(ismod.value)
 }
 const cancelEdit = () => {
-    if(editformref){
+    if (editformref) {
         const form = unref(editformref)
         form.resetFields();
     }
@@ -464,7 +474,7 @@ const handleDelete = (id) => {
         getTabledata()
     }, err => {
         let _resp = err.response
-        switch (_resp.status) { 
+        switch (_resp.status) {
             case 400:
                 alert('nonono!bad request in delete!')
         }
@@ -477,7 +487,7 @@ const handleLock = (id) => {
         getTabledata()
     }, err => {
         let _resp = err.response
-        switch (_resp.status) { 
+        switch (_resp.status) {
             case 400:
                 alert('nonono!bad request in lock!')
         }
@@ -508,7 +518,7 @@ const handleUnfreeze = (id) => {
 const muldel = () => {
     console.log(multipleSelection.value)
     console.log(select_orderId.value)
-    try{
+    try {
         // axios({
         //     method:'patch',
         //     url: '/api/sysuser/action/delete',
@@ -528,8 +538,8 @@ const muldel = () => {
 }
 const mulfro = () => {
     console.log(multipleSelection.value)
-    try{
-        mulOpera("freeze",select_orderId.value).then(res => {
+    try {
+        mulOpera("freeze", select_orderId.value).then(res => {
             console.log(res.data)
             multipleTableRef.value.clearSelection()
             getTabledata()
@@ -540,8 +550,8 @@ const mulfro = () => {
 }
 const mulunfro = () => {
     console.log(multipleSelection.value)
-    try{
-        mulOpera("unfreeze",select_orderId.value).then(res => {
+    try {
+        mulOpera("unfreeze", select_orderId.value).then(res => {
             console.log(res.data)
             multipleTableRef.value.clearSelection()
             getTabledata()
@@ -552,53 +562,53 @@ const mulunfro = () => {
 }
 const mullock = () => {
     console.log(multipleSelection.value)
-    try{
-        mulOpera("lock",select_orderId.value).then(res => {
+    try {
+        mulOpera("lock", select_orderId.value).then(res => {
             console.log(res.data)
             multipleTableRef.value.clearSelection()
             getTabledata()
         })
     } catch (error) {
-        console.log('mullock error!',error)
+        console.log('mullock error!', error)
     }
 }
 const mulunlock = () => {
     console.log(multipleSelection.value)
-    try{
-        mulOpera("unlock",select_orderId.value).then(res => {
+    try {
+        mulOpera("unlock", select_orderId.value).then(res => {
             console.log(res.data)
             multipleTableRef.value.clearSelection()
             getTabledata()
         }, err => {
             let _resp = err.response
-            switch (_resp.status) { 
+            switch (_resp.status) {
                 case 400:
                     alert('nonono!bad request in unlock!')
             }
         })
     } catch (error) {
-        console.log('mulunlock error!',error)
+        console.log('mulunlock error!', error)
     }
 }
 const getSearchinfo = () => {
     console.log(searchselect.value)
     console.log(searchinput.value)
     searchTableVisible.value = true
-    try{
+    try {
         // axios({
         //     method:'post',
         //     url: '/api/sysuser/search',
         //     headers: {
         //         Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNjg3MDUwMDEyLCJqdGkiOiJjNDIzOGM2ZS02MzY2LTRkNDktOTc1YS00NWExMWNhMjczMjYiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjoxLCJuYmYiOjE2ODcwNTAwMTIsImV4cCI6MTY4NzEzNjQxMn0.c5H8FlCs8p5NjGVYKJqf8vIvKRpzgqywPRCQ_qO6rb8'
         //     },
-            // data: 
+        // data: 
         // })
-        sysSearch({"sysrole": searchinput.value}).then(res => {
+        sysSearch({ "sysrole": searchinput.value }).then(res => {
             console.log(res.data)
             searchData.value = res.data.children
         }, err => {
             let _resp = err.response
-            switch (_resp.status) { 
+            switch (_resp.status) {
                 case 400:
                     alert('nonono!bad req!')
             }
@@ -619,6 +629,7 @@ const getSearchinfo = () => {
 .el-table {
     margin-bottom: 20px;
 }
+
 .input-with-select .el-input-group__prepend {
     background-color: var(--el-fill-color-blank);
 }

@@ -40,7 +40,7 @@
 
         <!-- 基于elementplus弹框，内容为form表单，内容包含：客户名称的input、客户logo的图片上传、客户联系人的input、联系人职位的input、练习方式的input、项目说明的textare -->
         <el-dialog v-model="dialogVisible" title="新增项目">
-            <el-form :model="form" :rules="rules" ref="form" label-width="100px">
+            <el-form :model="form" :rules="rules" ref="elform" label-width="100px">
                 <el-form-item label="编号" prop="b_id">
                     <el-input v-model="form.b_id"></el-input>
                 </el-form-item>
@@ -61,14 +61,14 @@
                 </el-form-item>
                 <el-form-item label="状态" prop="b_status">
                     <el-select v-model="form.b_status">
-                        <el-option label="禁用" value="1" />
+                        <el-option label="禁用" value="0" />
                         <el-option label="启用" value="1" />
                     </el-select>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="submitForm('form')">确 定</el-button>
+                <el-button type="primary" @click="submitForm()">确 定</el-button>
             </span>
         </el-dialog>
 
@@ -169,12 +169,13 @@ const add = () => {
 }
 //表单
 const form = ref({
-    customerName: '',
-    customerLogo: '',
-    customerContact: '',
-    contactPosition: '',
-    practiceMode: '',
-    projectDescription: ''
+    b_id: '',
+    b_type: '',
+    b_value: '',
+    b_addpeople: '',
+    b_addtime: '',
+    b_status: '',
+    b_remark: ''
 });
 const rules = ref({
     b_id: [
@@ -200,6 +201,7 @@ const rules = ref({
     ],
 });
 const submitForm = (formName) => {
+    dialogVisible.value = false;
     console.log(formName);
 }
 //图片上传

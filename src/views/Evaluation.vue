@@ -3,7 +3,7 @@
     <div>
         <!-- 基于elementplus，标题模块，标题为项目管理 -->
         <div class="header">
-            <div class="title">测评管理</div>
+            <div class="title">测评任务管理</div>
         </div>
         <!-- 基于elementplus，form表单，inline模式，新增按钮、开始按钮、暂停按钮、恢复按钮、删除按钮、锁定按钮、解锁按钮 -->
         <el-form :inline="true" class="form">
@@ -11,42 +11,46 @@
                 <el-button @click="add()" type="primary" class="button">新增</el-button>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" class="button">开始</el-button>
+                <el-button @click="sendwin()" type="primary" class="button">多个任务发送</el-button>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" class="button">暂停</el-button>
+                <el-button type="primary" class="button" @click="handleClick">锁定</el-button>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" class="button">恢复</el-button>
+                <el-button type="primary" class="button" @click="handleClick1">解锁</el-button>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" class="button">删除</el-button>
+                <el-input v-model="input" placeholder="请输入编号" clearable></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" class="button">锁定</el-button>
+                <el-button @click="search()" type="primary" class="button">查询</el-button>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" class="button">解锁</el-button>
+                <el-input v-model="finput" placeholder="请输入过滤条件" clearable></el-input>
             </el-form-item>
+            <!-- <el-form-item>
+                <el-button @click="filter()" type="primary" class="button">筛选</el-button>
+              </el-form-item> -->
         </el-form>
         <!-- 基于elementplus，table表格，表格内容为项目编号、项目名称、测评次数、测评序号、测评名称、测评类别、操作（暂停、恢复、删除、锁定、解锁、报告生成、报告更新、下载） -->
-        <el-table :data="currentTableData" class="table" width="100%">
+        <el-table :data="pagedData" v-model:selected-row-keys="selectedRowKeys" @selection-change="handleSelectionChange"
+            :page-size="pageSize" class="table" width="100%">
             <el-table-column type="selection" />
-            <el-table-column prop="number" label="编号" width="100"></el-table-column>
-            <el-table-column prop="type" label="类型" width="100"></el-table-column>
-            <el-table-column prop="name" label="名称" width="100"></el-table-column>
-            <el-table-column prop="status" label="状态" width="100"></el-table-column>
+            <el-table-column prop="id" label="任务编号" width="100"></el-table-column>
+            <el-table-column prop="sender" label="发送人" width="100"></el-table-column>
+            <el-table-column prop="recipient" label="收件人" width="100"></el-table-column>
+            <el-table-column prop="sent_at" label="发送时间" width="100"></el-table-column>
+            <el-table-column prop="subject" label="主题" width="100"></el-table-column>
+            <el-table-column prop="content" label="内容" width="100"></el-table-column>
             <el-table-column prop="project" label="所属项目" width="100"></el-table-column>
-            <el-table-column prop="num" label="受测用户数" width="100"></el-table-column>
-            <el-table-column prop="xianzhi" label="评率限制" width="100"></el-table-column>
-            <el-table-column prop="templateNo" label="模板编号" width="100"></el-table-column>
-            <el-table-column prop="emailNo" label="邮件服务器编号" width="100"></el-table-column>
-            <el-table-column prop="serverNo" label="相应服务器编号" width="100"></el-table-column>
-            <el-table-column prop="date" label="创建日期" width="100"></el-table-column>
-            <el-table-column prop="is" label="数据是否加密" width="100"></el-table-column>
-            <el-table-column prop="beizhu" label="备注" width="100"></el-table-column>
+            <el-table-column prop="user_count" label="首测用户数" width="100"></el-table-column>
+            <el-table-column prop="frequency_limit" label="频率限制" width="100"></el-table-column>
+            <el-table-column prop="mail_server_id" label="邮件服务器编号" width="100"></el-table-column>
+            <el-table-column prop="response_server_id" label="相应服务器编号" width="100"></el-table-column>
+            <!-- <el-table-column prop="data_encryption" label="数据是否加密" width="100"></el-table-column> -->
+            <el-table-column prop="remark" label="备注" width="100"></el-table-column>
             <el-table-column fixed="right" label="操作">
-                <template #default>
+                <template #default="scope">
                     <el-button @click="dele(scope.row.id)" type="text">删除</el-button>
                     <el-button @click="stop(scope.row.recipient)" type="text">暂停发送</el-button>
                     <el-button @click="start()" type="text" :disabled="disableButton1">开始发送</el-button>
@@ -59,48 +63,56 @@
         </el-table>
 
         <!-- 分页 -->
-        <el-pagination background layout="prev, pager, next" :total="total" :page-size="pageSize" class="pagination"
-            @current-change="handleCurrentChange" style="position: absolute;bottom: 4vh;"></el-pagination>
+        <el-pagination background layout="prev, pager, next" :current-page="currentPage" :total="tableData.length"
+            :page-size="pageSize" @current-change="handleCurrentChange">
+        </el-pagination>
         <!-- 基于elementplus弹框，内容为form表单，内容包含：目标选择的下拉菜单，邮件模板选择下拉菜单、接收方评率限制下拉菜单、发送时段输入框、选择邮件服务器输入框、邮件发件人输入框、选择相应服务器输入框、备注输入框 -->
-        <el-dialog v-model="dialogVisible" title="新增">
-            <el-form :model="form2" :rules="rules" ref="form" label-width="180px" class="demo-ruleForm">
-                <el-form-item label="目标选择" prop="mubiao">
-                    <el-select v-model="form.mubiao" placeholder="请选择">
-                        <el-option label="选项1" value="1"></el-option>
-                        <el-option label="选项2" value="2"></el-option>
+        <el-dialog v-model="dialogVisible1" title="新增">
+            <el-form :model="form2" label-width="180px" class="demo-ruleForm">
+
+                <el-form-item label="发送人">
+                    <el-input v-model="form2.sender"></el-input>
+                </el-form-item>
+                <el-form-item label="收件人">
+                    <el-input v-model="form2.recipient"></el-input>
+                </el-form-item>
+                <el-form-item label="主题">
+                    <el-input v-model="form2.subject"></el-input>
+                </el-form-item>
+                <!-- <el-form-item label="内容">
+                    <el-input v-model="form2.content"></el-input>
+                </el-form-item> -->
+                <el-form-item label="所属项目">
+                    <el-input v-model="form2.project"></el-input>
+                </el-form-item>
+                <el-form-item label="受测用户数">
+                    <el-input v-model="form2.user_count"></el-input>
+                </el-form-item>
+                <el-form-item label="接收方频率限制">
+                    <el-select v-model="form2.frequency_limit" placeholder="请选择">
+                        <el-option label="5/s" value="5/s"></el-option>
+                        <el-option label="10/s" value="10/s"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="邮件模板选择" prop="emailTemplate">
-                    <el-select v-model="form.emailTemplate" placeholder="请选择">
-                        <el-option label="选项1" value="1"></el-option>
-                        <el-option label="选项2" value="2"></el-option>
+                <!-- <el-form-item label="邮件服务器编号">
+                    <el-input v-model="form2.mail_server_id"></el-input>
+                </el-form-item>
+                <el-form-item label="响应服务器编号">
+                    <el-input v-model="form2.response_server_id"></el-input>
+                </el-form-item>
+                <el-form-item label="数据是否加密">
+                    <el-select v-model="form2.data_encryption" placeholder="请选择">
+                        <el-option label="是" value="true"></el-option>
+                        <el-option label="否" value="false"></el-option>
                     </el-select>
-                </el-form-item>
-                <el-form-item label="接收方评率限制" prop="pinglv">
-                    <el-select v-model="form.pinglv" placeholder="请选择">
-                        <el-option label="选项1" value="1"></el-option>
-                        <el-option label="选项2" value="2"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="发送时段" prop="shiduan">
-                    <el-input v-model="form.shiduan"></el-input>
-                </el-form-item>
-                <el-form-item label="选择邮件服务器" prop="server">
-                    <el-input v-model="form.server"></el-input>
-                </el-form-item>
-                <el-form-item label="邮件发件人" prop="people">
-                    <el-input v-model="form.people"></el-input>
-                </el-form-item>
-                <el-form-item label="选择相应服务器" prop="server2">
-                    <el-input v-model="form.server2"></el-input>
-                </el-form-item>
-                <el-form-item label="备注" prop="beizhu">
-                    <el-input v-model="form.beizhu"></el-input>
+                </el-form-item> -->
+                <el-form-item label="备注">
+                    <el-input v-model="form2.remark"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                <el-button @click="dialogVisible1 = false">取 消</el-button>
+                <el-button type="primary" @click="submitForm2('form2')">确 定</el-button>
             </span>
         </el-dialog>
         <el-dialog v-model="dialogVisible" title="开始发送邮件">
@@ -108,10 +120,13 @@
                 <el-form-item label="选择发送对象">
                     <el-input v-model="form.email"></el-input>
                 </el-form-item>
-                <el-form-item label="邮件编号">
+                <el-form-item label="发送时间">
+                    <el-input v-model="form.send_time"></el-input>
+                </el-form-item>
+                <el-form-item label="用户名">
                     <el-input v-model="form.user_id"></el-input>
                 </el-form-item>
-                <el-form-item label="邮件主题">
+                <el-form-item label="用户id">
                     <el-input v-model="form.user_name"></el-input>
                 </el-form-item>
                 <el-form-item label="邮件内容">
@@ -123,7 +138,26 @@
                 <el-button type="primary" @click="submitForm('form')">确 定</el-button>
             </span>
         </el-dialog>
-
+        <el-dialog v-model="dialogVisible3" title="开始发送邮件">
+            <el-form :model="form" label-width="180px" class="demo-ruleForm">
+                <el-form-item label="发送时间">
+                    <el-input v-model="form.send_time"></el-input>
+                </el-form-item>
+                <el-form-item label="用户名">
+                    <el-input v-model="form.user_id"></el-input>
+                </el-form-item>
+                <el-form-item label="用户id">
+                    <el-input v-model="form.user_name"></el-input>
+                </el-form-item>
+                <el-form-item label="邮件内容">
+                    <Editor v-model="form.content" :init="init"></Editor>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible3 = false">取 消</el-button>
+                <el-button type="primary" @click="submitForm3('form')">确 定</el-button>
+            </span>
+        </el-dialog>
         <el-dialog v-model="dialogVisible2" title="暂停发送邮件">
             <el-form :model="form1" label-width="180px" class="demo-ruleForm">
                 <el-form-item label="选择暂停对象">
@@ -138,7 +172,7 @@
         </el-dialog>
     </div>
 </template>
-<script lang="ts"  setup>
+<script setup>
 const format = (percentage) => (percentage === 100 ? 'Full' : `${percentage}%`)
 //引入reactive
 import {
@@ -162,15 +196,17 @@ const disableButton1 = ref(false)
 const dialogVisible = ref(false);
 const dialogVisible1 = ref(false);
 const dialogVisible2 = ref(false);
+const dialogVisible3 = ref(false);
 //form  
 const form = ref({
-    "email": '1283543521@qq.com',
+    "email": '',
+    send_time: "2023.6.20.19:",
     user_id: '',
     user_name: '',
     content: '',
 });
 const form1 = ref({
-    "email": '1283543521@qq.com',
+    "email": '',
 });
 //form2
 const form2 = ref({
@@ -222,7 +258,44 @@ const fetchData = () => {
     })
     closeLoading()
 }
-//筛选
+//批量发送
+const selectedRowKeys = ref([])
+const selectedRevs = ref([])
+const handleSelectionChange = (selectedRows) => {
+    // 判断是否有选择的数据
+    if (selectedRows.length > 0) {
+        const Revs = selectedRows.map(item => item.recipient)
+        selectedRevs.value = Revs
+    }
+}
+const sendwin = () => {
+    dialogVisible3.value = true;
+}
+const submitForm3 = () => {
+    for (let i = 0; i < selectedRevs.value.length; i++) {
+        const item = selectedRevs.value[i]
+        form.value.email = item
+
+        send2()
+        alert("成功发送第" + (i + 1) + "封")
+    }
+    dialogVisible3.value = false;
+}
+const send2 = () => {
+    openLoading()
+
+    axios.post('/api/mail/send_mail', form.value)
+        .then(response => {
+            // 后端处理成功后执行的代码
+            dialogVisible.value = false;
+
+        })
+        .catch(error => {
+            // 后端处理失败后执行的代码
+            alert("发送失败")
+        })
+    closeLoading()
+}
 //加载
 const loading = ref(false)
 const openLoading = () => {
@@ -297,9 +370,7 @@ const dele = (id) => {
 }
 //add
 const add = () => {
-
     dialogVisible1.value = true;
-
 }
 const submitForm2 = () => {
     openLoading()
@@ -422,17 +493,21 @@ const cancel = (recipient) => {
         .then(response => {
             // 后端处理成功后执行的代码
             // dialogVisible1.value = false;
-            alert("取消成功")
+            alert("停止成功")
         })
         .catch(error => {
             // 后端处理失败后执行的代码
-            alert("取消失败")
+            alert("停止失败")
         })
     // dialogVisible1.value = true;
 }
 </script>
-
 <style scoped>
+.demo-progress .el-progress--line {
+    margin-bottom: 15px;
+    width: 350px;
+}
+
 .title {
     height: 50px;
     line-height: 50px;
