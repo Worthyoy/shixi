@@ -233,132 +233,129 @@
                         readonly></el-input>
                 </el-form-item>
             </el-form>
-            <!-- detail中招情况查看 -->
-            <el-dialog v-model="detaildialogVisible" title="用户中招信息">
-                <el-table :data="UserDetail" style="width: 100%" class="table">
-                    <el-table-column label="ID" fixed prop="id" width="40" align="center" sortable></el-table-column>
-                    <el-table-column label="用户ID" prop="taguid" width="80" align="center"></el-table-column>
-                    <el-table-column label="用户名" prop="username" align="center"></el-table-column>
-                    <el-table-column label="项目ID" prop="taskid" align="center"></el-table-column>
-                    <el-table-column label="项目名称" prop="taskname" align="center"></el-table-column>
-                    <el-table-column label="中招时间" prop="tricktime" align="center"></el-table-column>
-                    <el-table-column label="行为" prop="action" align="center"></el-table-column>
-                    <el-table-column label="输入内容" prop="inputContent" align="center"></el-table-column>
-                    <el-table-column label="微信号" prop="comments" align="center"></el-table-column>
-                </el-table>
-            </el-dialog>
+        </el-dialog>
+        <!-- detail中招情况查看 -->
+        <el-dialog v-model="detaildialogVisible" title="用户中招信息">
+            <el-table :data="UserDetail" style="width: 100%" class="table">
+                <el-table-column label="ID" fixed prop="id" width="40" align="center" sortable></el-table-column>
+                <el-table-column label="用户ID" prop="taguid" width="80" align="center"></el-table-column>
+                <el-table-column label="用户名" prop="username" align="center"></el-table-column>
+                <el-table-column label="项目ID" prop="taskid" align="center"></el-table-column>
+                <el-table-column label="项目名称" prop="taskname" align="center"></el-table-column>
+                <el-table-column label="中招时间" prop="tricktime" align="center"></el-table-column>
+                <el-table-column label="行为" prop="action" align="center"></el-table-column>
+                <el-table-column label="输入内容" prop="inputContent" align="center"></el-table-column>
+                <el-table-column label="微信号" prop="comments" align="center"></el-table-column>
+            </el-table>
+        </el-dialog>
 
-            <!-- edit修改弹框 -->
-            <el-dialog v-model="editdialogVisible" title="修改">
-                <el-form :model="editform" ref="editformref" label-width="80px" class="form">
-                    <el-form-item label="用户名" prop="username">
-                        <el-input v-model="editform.username" placeholder="请输入用户名"></el-input>
-                    </el-form-item>
-                    <el-form-item label="邮箱" prop="email">
-                        <el-input v-model="editform.email" placeholder="请输入邮箱"></el-input>
-                    </el-form-item>
-                    <el-form-item label="系统角色" prop="representativeID">
-                        <el-input v-model="editform.representativeID" placeholder="请输入系统角色"></el-input>
-                    </el-form-item>
-                    <el-form-item label="职位" prop="position">
-                        <el-input v-model="editform.position" placeholder="请输入职位"></el-input>
-                    </el-form-item>
-                    <el-form-item label="组织号" prop="orgid">
-                        <el-input v-model="editform.orgid" placeholder="请输入组织号"></el-input>
-                    </el-form-item>
-                    <el-form-item label="备注" prop="comments">
-                        <el-input v-model="editform.comments" placeholder="请输入备注"></el-input>
-                    </el-form-item>
-                    <el-form-item label="手机" prop="mobile">
-                        <el-input v-model="editform.mobile" placeholder="请输入手机"></el-input>
-                    </el-form-item>
-                    <el-form-item label="座机" prop="telephone">
-                        <el-input v-model="editform.telephone" placeholder="请输入座机"></el-input>
-                    </el-form-item>
-                    <el-form-item label="微信" prop="wechat_num">
-                        <el-input v-model="editform.wechat_num" placeholder="请输入微信"></el-input>
-                    </el-form-item>
-                    <el-form-item label="电报" prop="telecom_num">
-                        <el-input v-model="editform.telecom_num" placeholder="请输入电报"></el-input>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" @click="submitEdit()">提交</el-button>
-                        <el-button @click="cancelEdit()">取消</el-button>
-                    </el-form-item>
-                </el-form>
-            </el-dialog>
+        <!-- edit修改弹框 -->
+        <el-dialog v-model="editdialogVisible" title="修改">
+            <el-form :model="editform" ref="editformref" label-width="80px" class="form">
+                <el-form-item label="用户名" prop="username">
+                    <el-input v-model="editform.username" placeholder="请输入用户名"></el-input>
+                </el-form-item>
+                <el-form-item label="邮箱" prop="email">
+                    <el-input v-model="editform.email" placeholder="请输入邮箱"></el-input>
+                </el-form-item>
+                <el-form-item label="系统角色" prop="representativeID">
+                    <el-input v-model="editform.representativeID" placeholder="请输入系统角色"></el-input>
+                </el-form-item>
+                <el-form-item label="职位" prop="position">
+                    <el-input v-model="editform.position" placeholder="请输入职位"></el-input>
+                </el-form-item>
+                <el-form-item label="组织号" prop="orgid">
+                    <el-input v-model="editform.orgid" placeholder="请输入组织号"></el-input>
+                </el-form-item>
+                <el-form-item label="备注" prop="comments">
+                    <el-input v-model="editform.comments" placeholder="请输入备注"></el-input>
+                </el-form-item>
+                <el-form-item label="手机" prop="mobile">
+                    <el-input v-model="editform.mobile" placeholder="请输入手机"></el-input>
+                </el-form-item>
+                <el-form-item label="座机" prop="telephone">
+                    <el-input v-model="editform.telephone" placeholder="请输入座机"></el-input>
+                </el-form-item>
+                <el-form-item label="微信" prop="wechat_num">
+                    <el-input v-model="editform.wechat_num" placeholder="请输入微信"></el-input>
+                </el-form-item>
+                <el-form-item label="电报" prop="telecom_num">
+                    <el-input v-model="editform.telecom_num" placeholder="请输入电报"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submitEdit()">提交</el-button>
+                    <el-button @click="cancelEdit()">取消</el-button>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
 
-            <!-- search查询弹框 -->
-            <el-dialog v-model="searchTableVisible" title="查询信息">
-                <el-form :model="searchForm" :inline="true" ref="searchref" class="demo-form-inline">
-                    <el-form-item label="用户id" prop="id">
-                        <el-input v-model="searchForm.id"></el-input>
-                    </el-form-item>
-                    <el-form-item label="邮箱" prop="email">
-                        <el-input v-model="searchForm.email" placeholder="email"></el-input>
-                    </el-form-item>
-                    <el-form-item label="用户名:" prop="partial_name">
-                        <el-input v-model="searchForm.partial_name" placeholder="name"></el-input>
-                    </el-form-item>
-                    <el-form-item label="手机" prop="mobile">
-                        <el-input v-model="searchForm.mobile" placeholder="mobile"></el-input>
-                    </el-form-item>
-                    <el-form-item label="组织号" prop="orgid">
-                        <el-input v-model="searchForm.orgid" placeholder="mobile"></el-input>
-                    </el-form-item>
-                    <el-form-item label="职位" prop="position">
-                        <el-input v-model="searchForm.position" placeholder="mobile"></el-input>
-                    </el-form-item>
-                    <el-form-item label="备注" prop="comments">
-                        <el-input v-model="searchForm.comments" placeholder="null"></el-input>
-                    </el-form-item>
-                    <el-form-item label="创建者ID" prop="createdbyuid">
-                        <el-input v-model="searchForm.createdbyuid" placeholder="null"></el-input>
-                    </el-form-item>
-                    <el-form-item label="创建时间" prop="createtime">
-                        <el-date-picker v-model="searchForm.createtime" type="datetime"
-                            placeholder="Select date and time" />
-                    </el-form-item>
-                    <el-form-item label="修改者ID" prop="modifiedbyuid">
-                        <el-input v-model="searchForm.modifiedbyuid" placeholder="null"></el-input>
-                    </el-form-item>
-                    <el-form-item label="修改时间" prop="modifiedtime">
-                        <el-date-picker v-model="searchForm.modifiedtime" type="datetime"
-                            placeholder="Select date and time" />
-                    </el-form-item>
-                    <el-divider />
-                    <el-form-item label="是否锁定" prop="status_lock">
-                        <el-select v-model="searchForm.status_lock" placeholder="Select" size="large">
-                            <el-option label="是" value=true />
-                            <el-option label="否" />
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="锁定者ID" prop="lockedbyuid">
-                        <el-input v-model="searchForm.lockedbyuid" placeholder="null"></el-input>
-                    </el-form-item>
-                    <el-form-item label="锁定时间" prop="lockedtime">
-                        <el-date-picker v-model="searchForm.lockedtime" type="datetime"
-                            placeholder="Select date and time" />
-                    </el-form-item>
-                    <el-form-item label="是否冻结" prop="status_freeze">
-                        <el-select v-model="searchForm.status_freeze" placeholder="Select" size="large">
-                            <el-option label="是" value=true />
-                            <el-option label="否" />
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="冻结者ID" prop="freezedbyuid">
-                        <el-input v-model="searchForm.freezedbyuid" placeholder="null"></el-input>
-                    </el-form-item>
-                    <el-form-item label="冻结时间" prop="freezetime">
-                        <el-date-picker v-model="searchForm.freezetime" type="datetime"
-                            placeholder="Select date and time" />
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" @click="submitsearchForm()">查询</el-button>
-                        <el-button @click="cancelsearchForm()">重置</el-button>
-                    </el-form-item>
-                </el-form>
-            </el-dialog>
+        <!-- search查询弹框 -->
+        <el-dialog v-model="searchTableVisible" title="查询信息">
+            <el-form :model="searchForm" :inline="true" ref="searchref" class="demo-form-inline">
+                <el-form-item label="用户id" prop="id">
+                    <el-input v-model="searchForm.id"></el-input>
+                </el-form-item>
+                <el-form-item label="邮箱" prop="email">
+                    <el-input v-model="searchForm.email" placeholder="email"></el-input>
+                </el-form-item>
+                <el-form-item label="用户名:" prop="partial_name">
+                    <el-input v-model="searchForm.partial_name" placeholder="name"></el-input>
+                </el-form-item>
+                <el-form-item label="手机" prop="mobile">
+                    <el-input v-model="searchForm.mobile" placeholder="mobile"></el-input>
+                </el-form-item>
+                <el-form-item label="组织号" prop="orgid">
+                    <el-input v-model="searchForm.orgid" placeholder="mobile"></el-input>
+                </el-form-item>
+                <el-form-item label="职位" prop="position">
+                    <el-input v-model="searchForm.position" placeholder="mobile"></el-input>
+                </el-form-item>
+                <el-form-item label="备注" prop="comments">
+                    <el-input v-model="searchForm.comments" placeholder="null"></el-input>
+                </el-form-item>
+                <el-form-item label="创建者ID" prop="createdbyuid">
+                    <el-input v-model="searchForm.createdbyuid" placeholder="null"></el-input>
+                </el-form-item>
+                <el-form-item label="创建时间" prop="createtime">
+                    <el-date-picker v-model="searchForm.createtime" type="datetime" placeholder="Select date and time" />
+                </el-form-item>
+                <el-form-item label="修改者ID" prop="modifiedbyuid">
+                    <el-input v-model="searchForm.modifiedbyuid" placeholder="null"></el-input>
+                </el-form-item>
+                <el-form-item label="修改时间" prop="modifiedtime">
+                    <el-date-picker v-model="searchForm.modifiedtime" type="datetime" placeholder="Select date and time" />
+                </el-form-item>
+                <el-divider />
+                <el-form-item label="是否锁定" prop="status_lock">
+                    <el-select v-model="searchForm.status_lock" placeholder="Select" size="large">
+                        <el-option label="是" value=true />
+                        <el-option label="否" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="锁定者ID" prop="lockedbyuid">
+                    <el-input v-model="searchForm.lockedbyuid" placeholder="null"></el-input>
+                </el-form-item>
+                <el-form-item label="锁定时间" prop="lockedtime">
+                    <el-date-picker v-model="searchForm.lockedtime" type="datetime" placeholder="Select date and time" />
+                </el-form-item>
+                <el-form-item label="是否冻结" prop="status_freeze">
+                    <el-select v-model="searchForm.status_freeze" placeholder="Select" size="large">
+                        <el-option label="是" value=true />
+                        <el-option label="否" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="冻结者ID" prop="freezedbyuid">
+                    <el-input v-model="searchForm.freezedbyuid" placeholder="null"></el-input>
+                </el-form-item>
+                <el-form-item label="冻结时间" prop="freezetime">
+                    <el-date-picker v-model="searchForm.freezetime" type="datetime" placeholder="Select date and time" />
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submitsearchForm()">查询</el-button>
+                    <el-button @click="cancelsearchForm()">重置</el-button>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
     </div>
 </template>
 <script setup>
