@@ -49,6 +49,7 @@ const onSubmit = () => {
     axios.post('/api/auth/login', {
         email: form.value.name,
         password: form.value.region,
+        verify_code: '1'
     }).then((rsp) => {
         console.log(rsp.data);
         if (rsp.data.status == 'success') {

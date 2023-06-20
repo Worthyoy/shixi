@@ -7,38 +7,38 @@
         <!-- toolbar工具栏：基于elementplus，form表单，inline模式，新增按钮、暂停按钮、恢复按钮、删除按钮、锁定按钮、解锁按钮 -->
         <el-form :inline="true" class="form">
             <el-form-item>
-                <el-button @click="add()" type="primary" class="button">新增</el-button>
+                <el-button @click="add()" type="text" class="button">新增</el-button>
             </el-form-item>
             <el-form-item>
-                <el-button @click="muldel()" type="primary" class="button">删除</el-button>
+                <el-button @click="muldel()" type="text" class="button">删除</el-button>
             </el-form-item>
             <el-form-item>
-                <el-button @click="mulfre()" type="primary" class="button">冻结</el-button>
+                <el-button @click="mulfre()" type="text" class="button">冻结</el-button>
             </el-form-item>
             <el-form-item>
-                <el-button @click="mulunfre()" type="primary" class="button">解冻</el-button>
+                <el-button @click="mulunfre()" type="text" class="button">解冻</el-button>
             </el-form-item>
             <el-form-item>
-                <el-button @click="mullock()" type="primary" class="button">锁定</el-button>
+                <el-button @click="mullock()" type="text" class="button">锁定</el-button>
             </el-form-item>
             <el-form-item>
                 <!-- <el-button @click="mullock()" :type="[islock ? 'warning' : 'success']" class="button">
                     <p v-if="islock">解锁</p>
                     <p v-if="!islock">锁定</p>
                 </el-button> -->
-                <el-button @click="mulunlock()" type="primary" class="button">解锁</el-button>
+                <el-button @click="mulunlock()" type="text" class="button">解锁</el-button>
             </el-form-item>
             <el-form-item>
                 <el-input v-model="searchinput" placeholder="Please input" class="input-with-select">
                     <template #prepend>
                         <el-select v-model="searchselect" placeholder="Select" style="width: 115px">
                             <!-- <el-option label="id" value="id" /> -->
-                            <el-option label="sysrole" value="sysrole" />
+                            <el-option label="name" value="name" />
                             <!-- <el-option label="orgid" value="orgid" /> -->
                         </el-select>
                     </template>
                     <template #append>
-                        <el-button :icon="Search" @click="getSearchinfo()" />
+                        <el-button :icon="Search" @click="getSearchinfo(searchinput)" />
                     </template>
                 </el-input>
             </el-form-item>
@@ -46,11 +46,9 @@
         <!-- 基于elementplus，table表格，表格内容为项目编号、项目名称、测评次数、测评序号、测评名称、测评类别、操作（暂停、恢复、删除、锁定、解锁、报告生成、报告更新、下载） -->
         <el-table ref="multipleTableRef" :row-key="getRowKeys" @selection-change="handleSelectionChange"
             :data="currentTableData" class="table" :border="true" width="100%" :row-style="rowClassName">
-            <el-table-column fixed type="selection" />
-            <el-table-column fixed type="expand" label="展开">
-                <!-- 展开后显示项目下的任务 -->
+            <el-table-column fixed type="selection" :selectable="selectable" />
+            <!-- <el-table-column fixed type="expand" label="展开">
                 <template #default="props">
-                    <!-- 任务表 -->
                     <el-table></el-table>
                     <div m="4">
                         <p m="t-0 b-2">{{ props.row.projectName }}</p>
@@ -59,23 +57,75 @@
                         <p m="t-0 b-2">{{ props.row.evaluationCategory }}</p>
                     </div>
                 </template>
+            </el-table-column> -->
+            <el-table-column fixed prop="projectNumber" label="项目编号" width="100">
+
             </el-table-column>
-            <el-table-column fixed prop="projectNumber" label="项目编号" width="100"></el-table-column>
-            <el-table-column prop="projectName" label="项目名称" width="120"></el-table-column>
-            <el-table-column label="项目管理员" width="80"></el-table-column>
-            <el-table-column prop="evaluationNumber" label="测评次数" width="100"></el-table-column>
-            <el-table-column prop="evaluationSerialNumber" label="测评序号" width="100"></el-table-column>
-            <el-table-column prop="evaluationName" label="测评名称" width="100"></el-table-column>
-            <el-table-column prop="evaluationCategory" label="测评类别" width="100"></el-table-column>
-            <el-table-column label="联系人" width="80"></el-table-column>
-            <el-table-column label="联系方式" width="100"></el-table-column>
-            <el-table-column label="备注" width="200"></el-table-column>
+            <el-table-column prop="projectName" label="项目名称" width="120">
+                <template #default="scope">
+                    <span v-if="!scope.row.isModify">{{ scope.row.projectName }}</span>
+                    <el-input v-else v-model="scope.row.projectName"></el-input>
+                </template>
+            </el-table-column>
+            <el-table-column label="项目管理员" width="80">
+                <template #default="scope">
+                    <span v-if="!scope.row.isModify">{{ scope.row.projectManaer }}</span>
+                    <el-input v-else v-model="scope.row.projectManaer"></el-input>
+                </template>
+            </el-table-column>
+            <el-table-column prop="evaluationNumber" label="测评次数" width="100">
+                <template #default="scope">
+                    <span v-if="!scope.row.isModify">{{ scope.row.evaluationNumber }}</span>
+                    <el-input v-else v-model="scope.row.evaluationNumber"></el-input>
+                </template>
+            </el-table-column>
+            <el-table-column prop="evaluationSerialNumber" label="测评序号" width="100">
+                <template #default="scope">
+                    <span v-if="!scope.row.isModify">{{ scope.row.evaluationSerialNumber }}</span>
+                    <el-input v-else v-model="scope.row.evaluationSerialNumber"></el-input>
+                </template>
+            </el-table-column>
+            <el-table-column prop="evaluationName" label="测评名称" width="100">
+                <template #default="scope">
+                    <span v-if="!scope.row.isModify">{{ scope.row.evaluationName }}</span>
+                    <el-input v-else v-model="scope.row.evaluationName"></el-input>
+                </template>
+            </el-table-column>
+            <el-table-column prop="evaluationCategory" label="测评类别" width="100">
+                <template #default="scope">
+                    <span v-if="!scope.row.isModify">{{ scope.row.evaluationCategory }}</span>
+                    <el-input v-else v-model="scope.row.evaluationCategory"></el-input>
+                </template>
+            </el-table-column>
+            <el-table-column label="联系人" width="80">
+                <template #default="scope">
+                    <span v-if="!scope.row.isModify">{{ scope.row.contact_person_name }}</span>
+                    <el-input v-else v-model="scope.row.contact_person_name"></el-input>
+                </template>
+            </el-table-column>
+            <el-table-column label="联系方式" width="100">
+                <template #default="scope">
+                    <span v-if="!scope.row.isModify">{{ scope.row.contact_way }}</span>
+                    <el-input v-else v-model="scope.row.contact_way"></el-input>
+                </template>
+            </el-table-column>
+            <el-table-column label="备注" width="200">
+                <template #default="scope">
+                    <span v-if="!scope.row.isModify">{{ scope.row.comments }}</span>
+                    <el-input v-else v-model="scope.row.comments"></el-input>
+                </template>
+            </el-table-column>
             <el-table-column fixed="right" label="操作" width="400">
                 <template #default="scope">
-                    <el-button @click="handleEdit(scope.row.projectNumber)" size="small">修改</el-button>
-                    <el-button @click="handleDelete(scope.row.projectNumber)" size="small">删除</el-button>
-                    <el-button @click="handleLock(scope.row.projectNumber)" size="small">暂停</el-button>
-                    <el-button @click="handleUnlock(scope.row.projectNumber)" size="small">恢复</el-button>
+                    <el-button size="small" @click="handleEdit(scope.row.projectNumber)">
+                        <span v-if="!scope.row.isModify">修改</span>
+                        <el-icon v-else>
+                            <Check />
+                        </el-icon>
+                    </el-button>
+                    <el-button @click="openDeleteMessage(scope.row.projectNumber)" size="small">删除</el-button>
+                    <el-button @click="handleLock(scope.row.projectNumber)" size="small">锁定</el-button>
+                    <el-button @click="handleUnlock(scope.row.projectNumber)" size="small">解锁</el-button>
                     <el-button @click="handleFreeze(scope.row.projectNumber)" size="small">冻结</el-button>
                     <el-button @click="handleUnfreeze(scope.row.projectNumber)" size="small">解冻</el-button>
                     <!-- <el-button @click="handleDetail(scope.row.id)" size="small">报告生成</el-button>
@@ -114,7 +164,7 @@
                 <el-form-item label="客户联系人" prop="customerContact">
                     <el-input v-model="form.customerContact"></el-input>
                 </el-form-item>
-                <el-form-item label="联系人职位" prop="contactPosition">
+                <el-form-item label="项目类型" prop="contactPosition">
                     <el-input v-model="form.contactPosition"></el-input>
                 </el-form-item>
                 <el-form-item label="联系方式" prop="practiceMode">
@@ -126,7 +176,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="cancelForm()">取 消</el-button>
-                <el-button type="primary" @click="submitForm(form)">确 定</el-button>
+                <el-button type="primary" @click="submitForm()">确 定</el-button>
             </span>
         </el-dialog>
 
@@ -134,9 +184,9 @@
 </template>
 <script setup>
 import { ref, unref, onMounted } from 'vue'
-import { Search } from '@element-plus/icons-vue'
+import { Search, Check } from '@element-plus/icons-vue'
 import axios from 'axios';
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
 onMounted(async () => {
     await getTabledata()
     getCurrentPageData(1)
@@ -151,16 +201,82 @@ async function getTabledata() {
             return {
                 projectNumber: item.id,
                 projectName: item.name,
-                evaluationNumber: '6',
-                evaluationSerialNumber: '6',
-                evaluationName: '测评6',
-                evaluationCategory: '类别6',
-                freeze: false
+                projectManaer: "hwy",
+                contact_person_name: item.contact_person_name,
+                contact_way: "hwy",
+                evaluationNumber: item.evaluation_count,
+                evaluationSerialNumber: item.tests_number,
+                evaluationName: item.test_name,
+                evaluationCategory: item.test_category,
+                freeze: item.isfreeze,
+                lock: item.ispause,
+                isModify: false, // by default it is false. if user modifies the record, it will be true.
+                comments: item.comments
             }
         });
     })
 }
-function handleDelete(id) {
+function openMulDeleteMessage(item) {
+    console.log('item', item.length)
+    if (item.length) {
+
+        ElMessageBox.confirm(
+            '是否确认删除所有选中项目?',
+            'Warning',
+            {
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Cancel',
+                type: 'warning',
+            }
+        )
+            .then(() => {
+                item.value.forEach(async (item) => {
+                    await handleDelete(item.projectNumber);
+                })
+                ElMessage({
+                    type: 'success',
+                    message: 'Delete completed',
+                })
+            })
+            .catch(() => {
+                ElMessage({
+                    type: 'info',
+                    message: 'Delete canceled',
+                })
+            })
+
+    } else {
+        ElMessage({
+            type: 'info',
+            message: '没有选中如何项目',
+        })
+    }
+}
+function openDeleteMessage(id) {
+    ElMessageBox.confirm(
+        '是否确认删除此项目\nID: ' + id + '?',
+        'Warning',
+        {
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Cancel',
+            type: 'warning',
+        }
+    )
+        .then(() => {
+            handleDelete(id)
+            ElMessage({
+                type: 'success',
+                message: 'Delete completed',
+            })
+        })
+        .catch(() => {
+            ElMessage({
+                type: 'info',
+                message: 'Delete canceled',
+            })
+        })
+}
+async function handleDelete(id) {
     console.log(id)
     axios.delete(`/api/project/${id}`)
         .then(async response => {
@@ -176,10 +292,13 @@ function handleDelete(id) {
 }
 function rowClassName({ row, column, rowIndex, columnIndex }) {
     if (row.freeze) {
-        return "background: rgba(0, 58, 148,0.2) !important;color: whitesmoke"
+        return "background: rgba(182,227,244,0.5) !important;"
     } else {
         return ""
     }
+}
+function selectable(row, index) {
+    return row.lock
 }
 let currentPage = ref(1);
 let pageSize = ref(5);
@@ -282,7 +401,12 @@ const submitForm = async () => {
             "custoid": 0,
             "owneruid": 0,
             "comments": "string",
-            "organization_id": 0
+            "organization_id": 0,
+            "test_name": form.value.customerName,
+            "test_category": form.value.contactPosition,
+            "contact_person_name": form.value.customerContact,
+            "project_administrator_name": form.value.manager,
+            "tests_number": 0
         }
         axios({
             method: 'post',
@@ -326,42 +450,86 @@ const cancelForm = () => {
 //     }
 //     return isJPG && isLt2M;
 // };
-const handleEdit = () => {
+const handleEdit = (id) => {
+    currentTableData.value.map((value) => {
+        if (value.projectNumber == id) {
+            value.isModify = !value.isModify;
+            getCurrentPageData(currentPage.value)
+            if (!value.isModify) {
+                console.log("axios", value)
+                let data = {
+                    "name": value.projectName,
+                    "custoid": 0,
+                    "owneruid": 0,
+                    "comments": value.comments,
+                    "organization_id": 0,
+                    "test_name": value.evaluationName,
+                    "test_category": value.evaluationCategory,
+                    "contact_person_name": value.contact_person_name,
+                    "project_administrator_name": value.projectManaer,
+                    "tests_number": 0
+                }
+                axios({
+                    method: 'post',
+                    url: '/api/project/' + id + '/modify',
+                    data: data,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(async res => {
+                    console.log('post new form success!', res.data)
+                    await getTabledata()
+                    getCurrentPageData(1)
+                    total.value = tableData.value.length;
+                    adddialogVisible.value = false
+                })
+            }
+        } else { value.isModify = false; }
+    })
 }
-const handleLock = (id) => {
+const handleLock = async (id) => {
     axios({
         method: 'patch',
-        url: '/api/project/' + id + '/freeze',
-    }).then((res) => {
+        url: '/api/project/' + id + '/pause',
+    }).then(async (res) => {
         if (res.data.message == "项目已恢复。") {
             ElMessage({ message: id + '暂停成功', type: 'success' })
+            await getTabledata()
+            getCurrentPageData(currentPage.value)
+            total.value = tableData.value.length;
         } else {
             console.log(res.data);
             alert('err', res.data)
         }
     }).catch((err) => {
-        ElMessage({ message: 'The project has been frozen', type: 'error' })
+        ElMessage({ message: id + '已经暂停', type: 'error' })
     })
 }
-const handleUnlock = (id) => {
+const handleUnlock = async (id) => {
     axios({
         method: 'put',
-        url: '/api/project/' + id + '/freeze',
-    }).then((res) => {
+        url: '/api/project/' + id + '/pause',
+    }).then(async (res) => {
         if (res.data.message == "项目已暂停。") {
             ElMessage({ message: id + '恢复成功', type: 'success' })
+            await getTabledata()
+            getCurrentPageData(currentPage.value)
+            total.value = tableData.value.length;
         } else {
             console.log(res.data);
         }
     })
 }
-const handleFreeze = (id) => {
+const handleFreeze = async (id) => {
     axios({
         method: 'patch',
         url: '/api/project/' + id,
-    }).then((res) => {
+    }).then(async (res) => {
         if (res.data.status == "success") {
-            ElMessage({ message: id + 'Freeze Success', type: 'success' })
+            ElMessage({ message: id + 'Freeze Success', type: 'success' });
+            await getTabledata()
+            getCurrentPageData(currentPage.value)
+            total.value = tableData.value.length;
         } else {
             alert('err')
         }
@@ -369,14 +537,17 @@ const handleFreeze = (id) => {
         ElMessage({ message: 'The project has been frozen', type: 'error' })
     })
 }
-const handleUnfreeze = (id) => {
+const handleUnfreeze = async (id) => {
     console.log('handleUnfreeze')
     axios({
         method: 'put',
         url: '/api/project/' + id,
-    }).then((res) => {
+    }).then(async (res) => {
         if (res.data.status == "success") {
             ElMessage({ message: id + 'Unfreeze Success', type: 'success' })
+            await getTabledata()
+            getCurrentPageData(currentPage.value)
+            total.value = tableData.value.length;
         } else {
             alert('err')
         }
@@ -387,23 +558,24 @@ const searchselect = ref('')
 const searchinput = ref('')
 // toolbar工具条多选操作
 const mullock = () => {
+    multipleSelection.value.forEach(async (item) => {
+        await handleLock(item.projectNumber);
+    })
 }
 const mulunlock = () => {
+    multipleSelection.value.forEach(async (item) => {
+        await handleUnlock(item.projectNumber);
+    })
 }
-const mulfre = (rows) => {
-    if (rows) {
-        rows.forEach((row) => {
-            // TODO: improvement typing when refactor table
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
-            multipleTableRef.value.toggleRowSelection(row, undefined)
-        })
-    } else {
-        console.log("multipleTableRef.value", multipleTableRef.value.selection)
-        multipleTableRef.value.clearSelection()
-    }
+const mulfre = () => {
+    multipleSelection.value.forEach(async (item) => {
+        await handleFreeze(item.projectNumber);
+    })
 }
 const mulunfre = () => {
+    multipleSelection.value.forEach(async (item) => {
+        await handleUnfreeze(item.projectNumber);
+    })
 }
 const muldel = (rows) => {
     if (rows) {
@@ -411,13 +583,39 @@ const muldel = (rows) => {
             // TODO: improvement typing when refactor table
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error
-            multipleTableRef.value.toggleRowSelection(row, undefined)
+            multipleTableRef.value
         })
     } else {
-        multipleTableRef.value.clearSelection()
+        openMulDeleteMessage(multipleSelection.value)
     }
 }
-const getSearchinfo = () => { }
+const getSearchinfo = async (name) => {
+    console.log('getSearchinfo', name, searchinput.value);
+    await axios({
+        method: 'get',
+        url: '/api/project/search/' + name,
+    }).then((res) => {
+        tableData.value = res.data.children.map(item => {
+            return {
+                projectNumber: item.id,
+                projectName: item.name,
+                projectManaer: "hwy",
+                contact_person_name: item.contact_person_name,
+                contact_way: "hwy",
+                evaluationNumber: item.evaluation_count,
+                evaluationSerialNumber: item.tests_number,
+                evaluationName: item.test_name,
+                evaluationCategory: item.test_category,
+                freeze: item.isfreeze,
+                lock: item.ispause,
+                isModify: false, // by default it is false. if user modifies the record, it will be true.
+                comments: item.comments
+            }
+        });
+        getCurrentPageData(currentPage.value)
+        total.value = tableData.value.length;
+    })
+}
 </script>
 <style scoped>
 .title {
@@ -431,9 +629,7 @@ const getSearchinfo = () => { }
     margin-bottom: 20px;
 }
 
-.table {
-    height: 60vh;
-}
+
 
 .rowName {
     background: deeppink !important;
