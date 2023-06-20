@@ -173,7 +173,7 @@ const logout = () => {
                                 <span>部门管理</span>
                             </template>
                         </el-menu-item>
-                        <el-menu-item index="/home/personnel">
+                        <!-- <el-menu-item index="/home/personnel">
                             <template #title>
                                 <el-icon>
                                     <svg t="1687142967380" class="icon" viewBox="0 0 1024 1024" version="1.1"
@@ -185,7 +185,7 @@ const logout = () => {
                                 </el-icon>
                                 <span>人员管理</span>
                             </template>
-                        </el-menu-item>
+                        </el-menu-item> -->
                         <el-menu-item index="/home/sysuser">
                             <template #title>
                                 <el-icon>

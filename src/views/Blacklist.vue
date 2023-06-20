@@ -56,8 +56,7 @@
     </div>
 </template>
 <script setup>
-import { reactive, ref, onMounted } from 'vue';
-import { ref, unref } from 'vue'
+import { reactive, ref, onMounted, unref } from 'vue';
 import { getlist, getItem, addlist, delItem, mulDel } from '../api/blacklist'
 onMounted(() => {
     getCurrentPageData(1)
