@@ -198,20 +198,22 @@ async function getTabledata() {
         url: '/api/project/',
     }).then(res => {
         tableData.value = res.data.children.map(item => {
+            console.log("item", item);
             return {
                 projectNumber: item.id,
                 projectName: item.name,
-                projectManaer: "hwy",
+                projectManaer: item.project_administrator_name,
                 contact_person_name: item.contact_person_name,
                 contact_way: "hwy",
                 evaluationNumber: item.evaluation_count,
-                evaluationSerialNumber: item.tests_number,
+                evaluationSerialNumber: item.id,
                 evaluationName: item.test_name,
                 evaluationCategory: item.test_category,
                 freeze: item.isfreeze,
                 lock: item.ispause,
                 isModify: false, // by default it is false. if user modifies the record, it will be true.
-                comments: item.comments
+                comments: item.comments,
+
             }
         });
     })
