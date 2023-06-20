@@ -53,7 +53,7 @@ const verifyCodeStr = ref('')
 //     desc: ''
 // })
 const form = ref({
-    email: 'admin@qq.com',
+    email: 'zhangsan@qq.com',
     password: 'caefefq34q3e',
     verify_code: ''
 })
