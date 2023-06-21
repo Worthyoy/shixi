@@ -27,7 +27,7 @@ const logout = () => {
 <template>
     <el-container class="home container">
         <el-header>
-            <div>国信安钓鱼工具</div>
+            <div class="header-left">国信安钓鱼工具</div>
             <!-- 姓名以及退出按钮 -->
             <div style="float: right;">
                 <el-button type="text" style="padding-right: 40px;" @click="toShow">项目展示</el-button>
@@ -292,6 +292,7 @@ body,
     justify-content: space-between;
     align-items: center;
 }
+
 
 .home .container2 {
     height: calc(100%-50px);

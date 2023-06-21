@@ -49,7 +49,7 @@
             <el-table-column prop="response_server_id" label="相应服务器编号" width="100"></el-table-column>
             <!-- <el-table-column prop="data_encryption" label="数据是否加密" width="100"></el-table-column> -->
             <el-table-column prop="remark" label="备注" width="100"></el-table-column>
-            <el-table-column fixed="right" label="操作">
+            <el-table-column fixed="right" label="操作" width="100">
                 <template #default="scope">
                     <el-button @click="dele(scope.row.id)" type="text">删除</el-button>
                     <el-button @click="stop(scope.row.recipient)" type="text">暂停发送</el-button>
@@ -277,7 +277,7 @@ const submitForm3 = () => {
         form.value.email = item
 
         send2()
-        alert("成功发送第" + (i + 1) + "封")
+        ElMessage("成功发送第" + (i + 1) + "封")
     }
     dialogVisible3.value = false;
 }
@@ -292,7 +292,7 @@ const send2 = () => {
         })
         .catch(error => {
             // 后端处理失败后执行的代码
-            alert("发送失败")
+            ElMessage("发送失败")
         })
     closeLoading()
 }
@@ -343,17 +343,17 @@ const handleCurrentChange = (val) => {
 const search = () => {
     openLoading()
     const i = input.value
-    //alert(i)
+    //ElMessage(i)
     axios.get(`/api/mail/get_mail/${i}`)
         .then(res => {
 
-            // alert(res.data.name)
+            // ElMessage(res.data.name)
 
             tableData.value = []
             tableData.value.push(res.data)
             tableData.value[0].content = tableData.value[0].content.substring(0, 6) + "..."
         }).catch(error => {
-            alert("查询失败")
+            ElMessage("查询失败")
         })
     closeLoading()
 }
@@ -365,7 +365,7 @@ const dele = (id) => {
             fetchData()
         })
         .catch(error => {
-            alert("删除失败")
+            ElMessage("删除失败")
         })
 }
 //add
@@ -378,12 +378,12 @@ const submitForm2 = () => {
         .then(response => {
             // 后端处理成功后执行的代码
             dialogVisible1.value = false;
-            alert("添加成功")
+            ElMessage("添加成功")
             fetchData()
         })
         .catch(error => {
             // 后端处理失败后执行的代码
-            alert("添加失败")
+            ElMessage("添加失败")
 
         })
     closeLoading()
@@ -431,7 +431,7 @@ const init = {
                     });
                 }
             }).catch(() => {
-                alert("上传出错，服务器开小差了呢");
+                ElMessage("上传出错，服务器开小差了呢");
             });
         }
     }
@@ -443,16 +443,16 @@ const start = () => {
 }
 const submitForm = () => {
     openLoading()
-    // alert(JSON.stringify(form.value));
+    // ElMessage(JSON.stringify(form.value));
     axios.post('/api/mail/send_mail', form.value)
         .then(response => {
             // 后端处理成功后执行的代码
             dialogVisible.value = false;
-            alert("发送成功")
+            ElMessage("发送成功")
         })
         .catch(error => {
             // 后端处理失败后执行的代码
-            alert("发送失败")
+            ElMessage("发送失败")
         })
     closeLoading()
 }
@@ -463,11 +463,11 @@ const stop = (recipient) => {
         .then(response => {
             // 后端处理成功后执行的代码
 
-            alert("暂停成功")
+            ElMessage("暂停成功")
         })
         .catch(error => {
             // 后端处理失败后执行的代码
-            alert(error);
+            ElMessage(error);
         })
     closeLoading()
 }
@@ -479,11 +479,11 @@ const resume = (recipient) => {
         .then(response => {
             // 后端处理成功后执行的代码
             // dialogVisible1.value = false;
-            alert("恢复成功")
+            ElMessage("恢复成功")
         })
         .catch(error => {
             // 后端处理失败后执行的代码
-            alert("恢复失败")
+            ElMessage("恢复失败")
         })
     closeLoading()
 }
@@ -493,11 +493,11 @@ const cancel = (recipient) => {
         .then(response => {
             // 后端处理成功后执行的代码
             // dialogVisible1.value = false;
-            alert("停止成功")
+            ElMessage("停止成功")
         })
         .catch(error => {
             // 后端处理失败后执行的代码
-            alert("停止失败")
+            ElMessage("停止失败")
         })
     // dialogVisible1.value = true;
 }
