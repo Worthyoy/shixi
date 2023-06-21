@@ -4,7 +4,7 @@
         <div class="header">
             <div class="title">项目管理</div>
         </div>
-        <!-- toolbar工具栏：基于elementplus，form表单，inline模式，新增按钮、暂停按钮、恢复按钮、删除按钮、锁定按钮、解锁按钮 -->
+        <!-- toolbar工具栏：基于elementplus，form表单，inline模式，新增按钮、锁定按钮、恢复按钮、删除按钮、锁定按钮、解锁按钮 -->
         <el-form :inline="true" class="form">
             <el-form-item>
                 <el-button @click="add()" type="text" class="button">新增</el-button>
@@ -43,7 +43,7 @@
                 </el-input>
             </el-form-item>
         </el-form>
-        <!-- 基于elementplus，table表格，表格内容为项目编号、项目名称、测评次数、测评序号、测评名称、测评类别、操作（暂停、恢复、删除、锁定、解锁、报告生成、报告更新、下载） -->
+        <!-- 基于elementplus，table表格，表格内容为项目编号、项目名称、测评次数、测评序号、测评名称、测评类别、操作（锁定、恢复、删除、锁定、解锁、报告生成、报告更新、下载） -->
         <el-table ref="multipleTableRef" :row-key="getRowKeys" @selection-change="handleSelectionChange"
             :data="currentTableData" class="table" :border="true" width="100%" :row-style="rowClassName">
             <el-table-column fixed type="selection" :selectable="selectable" />
@@ -493,7 +493,7 @@ const handleLock = async (id) => {
         url: '/api/project/' + id + '/pause',
     }).then(async (res) => {
         if (res.data.message == "项目已恢复。") {
-            ElMessage({ message: id + '暂停成功', type: 'success' })
+            ElMessage({ message: id + '锁定成功', type: 'success' })
             await getTabledata()
             getCurrentPageData(currentPage.value)
             total.value = tableData.value.length;
@@ -502,7 +502,7 @@ const handleLock = async (id) => {
             alert('err', res.data)
         }
     }).catch((err) => {
-        ElMessage({ message: id + '已经暂停', type: 'error' })
+        ElMessage({ message: id + '已经锁定', type: 'error' })
     })
 }
 const handleUnlock = async (id) => {
@@ -510,7 +510,7 @@ const handleUnlock = async (id) => {
         method: 'put',
         url: '/api/project/' + id + '/pause',
     }).then(async (res) => {
-        if (res.data.message == "项目已暂停。") {
+        if (res.data.message == "项目已锁定。") {
             ElMessage({ message: id + '恢复成功', type: 'success' })
             await getTabledata()
             getCurrentPageData(currentPage.value)

@@ -14,7 +14,8 @@
             </el-form-item>
         </el-form>
         <!-- 基于elementplus，table表格，表格内容为项目编号、项目名称、测评次数、测评序号、测评名称、测评类别、操作（暂停、恢复、删除、锁定、解锁、报告生成、报告更新、下载） -->
-        <el-table ref="multipleTableRef" :row-key="getRowKeys" @selection-change="handleSelectionChange" :data="tableData" class="table" width="100%">
+        <el-table ref="multipleTableRef" :row-key="getRowKeys" @selection-change="handleSelectionChange" :data="tableData"
+            class="table" width="100%">
             <el-table-column :reserve-selection="true" type="selection" />
             <el-table-column prop="id" label="编号" width="40" align="center"></el-table-column>
             <el-table-column prop="jti" label="tokenID" width="300" align="center"></el-table-column>
@@ -55,8 +56,7 @@
     </div>
 </template>
 <script setup>
-import { reactive, ref, onMounted } from 'vue';
-import { ref,unref } from 'vue'
+import { reactive, ref, onMounted, unref } from 'vue';
 import { getlist, getItem, addlist, delItem, mulDel } from '../api/blacklist'
 onMounted(() => {
     getCurrentPageData(1)
@@ -85,8 +85,8 @@ const formref = ref(null)
 const tableData = ref([]);
 const getTabledata = () => {
     getlist().then(res => {
-        console.log('get blacklist!',res.data)
-        tableData.value=res.data.children
+        console.log('get blacklist!', res.data)
+        tableData.value = res.data.children
     })
 }
 getTabledata()
@@ -105,22 +105,22 @@ const rules = ref({
 });
 const submitForm = async () => {
     const refform = unref(formref)
-    if(!refform) return
-    try{
+    if (!refform) return
+    try {
         await refform.validate()
         addlist(form.value).then(res => {
-            console.log('post new form success!',res.data)
+            console.log('post new form success!', res.data)
             alert(res.data)
             getTabledata()
             dialogVisible.value = false
             refform.resetFields()
         })
     } catch (error) {
-        console.log('no! form add failed! ',error)
+        console.log('no! form add failed! ', error)
     }
 }
 const cancelForm = () => {
-    if(formref){
+    if (formref) {
         const form = unref(formref)
         form.resetFields();
     }

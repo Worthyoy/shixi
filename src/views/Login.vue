@@ -81,6 +81,7 @@ const onSubmit = () => {
         if (rsp.data.status == 'success') {
             alert(rsp.data.message)
             sessionStorage.setItem('Authorization', rsp.data.Authorization); //存储Authorization到页面中
+            sessionStorage.setItem('sysrole', rsp.data.sysrole)
             console.log(sessionStorage.getItem('Authorization'))
             router.push('/home')
         } else {
