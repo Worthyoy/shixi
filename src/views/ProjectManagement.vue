@@ -33,7 +33,7 @@
                     <template #prepend>
                         <el-select v-model="searchselect" placeholder="Select" style="width: 115px">
                             <!-- <el-option label="id" value="id" /> -->
-                            <el-option label="name" value="name" />
+                            <el-option label="项目名称" value="name" />
                             <!-- <el-option label="orgid" value="orgid" /> -->
                         </el-select>
                     </template>

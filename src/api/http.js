@@ -33,11 +33,10 @@ http.interceptors.response.use((resp) => {
         case 401:
             sessionStorage.removeItem('Authorization')
                 // sessionStorage.removeItem('user')
-            alert('token过期，请重新登录')
             router.push('/login')
             break
         default:
-            alert(_resp.data)
+            console.log(_resp.data)
     }
     return Promise.reject(err)
 })

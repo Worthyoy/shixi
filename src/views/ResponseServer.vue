@@ -69,7 +69,7 @@ onMounted(() => {
     console.log(total.value)
 })
 let currentPage = ref(1);
-let pageSize = ref(1);
+let pageSize = ref(5);
 let total = ref(0);
 let currentTableData = ref([])
 function getCurrentPageData(val) {

@@ -47,8 +47,8 @@
         </el-form>
 
         <!-- Table信息列表：基于elementplus，table表格，表格内容为编号、状态、上次测试时间、创建日期、操作（修改、删除、测试、锁定、解锁） -->
-        <el-table ref="multipleTableRef" :row-key="getRowKeys" @selection-change="handleSelectionChange" :data="tableData"
-            :row-class-name="tableRowClassName" style="width: 100%" class="table">
+        <el-table ref="multipleTableRef" :row-key="getRowKeys" @selection-change="handleSelectionChange"
+            :data="currentTableData" :row-class-name="tableRowClassName" style="width: 100%" class="table">
             <el-table-column fixed type="selection" :reserve-selection="true" width="30" />
             <el-table-column label="ID" fixed prop="id" width="40" align="center" sortable></el-table-column>
             <el-table-column label="用户名" prop="username" width="80" align="center"></el-table-column>
@@ -112,7 +112,8 @@
         </el-table>
 
         <!-- 分页 -->
-        <el-pagination background layout="prev, pager, next" :total="100" class="pagination"></el-pagination>
+        <el-pagination background layout="prev, pager, next" :total="total" :page-size="pageSize" class="pagination"
+            @current-change="handleCurrentChange" style="position: absolute;bottom: 4vh;"></el-pagination>
 
         <!-- add新增弹框：基于elementplus弹框，内容为form表单，内容包含：单位名称的select、部门名称的select、用户名的input、邮箱的input、角色的input、用户密码的input、岗位类别的select、职位的input、手机的input、备注的input、下载的按钮、导入的按钮 -->
         <el-dialog v-model="adddialogVisible" title="新增">
@@ -279,13 +280,38 @@
     </div>
 </template>
 <script setup>
-import { ref, unref } from 'vue'
+import { ref, unref, onMounted } from 'vue'
 import axios from 'axios'
 import http from '../api/http'
 import { getAlluser, addtaguser, getAtaguser, tagEdit, tagopera, multagopera, tagSearch, getTagTrick, AuserTrick } from '../api/user'
 import { Search } from '@element-plus/icons-vue'
 import { InfoFilled } from '@element-plus/icons-vue'
-
+import { ElMessage } from 'element-plus'
+const refreshData = async () => {
+    await getTabledata()
+    getCurrentPageData(currentPage.value);
+    total.value = tableData.value.length
+    console.log("currentTableData", currentTableData.value);
+}
+onMounted(refreshData)
+let currentPage = ref(1);
+let pageSize = ref(5);
+let total = ref(0);
+let currentTableData = ref([])
+function getCurrentPageData(val) {
+    console.log("tableData.value", tableData.value);
+    let begin = (val - 1) * pageSize.value;
+    let end = val * pageSize.value;
+    currentTableData.value = tableData.value.slice(
+        begin,
+        end
+    );
+    console.log("currentTableData", currentTableData.value);
+}
+function handleCurrentChange(val) {
+    getCurrentPageData(val);
+    currentPage.value = val;
+};
 const adddialogVisible = ref(false);
 const detaildialogVisible = ref(false);
 const editdialogVisible = ref(false);
@@ -301,14 +327,14 @@ const searchref = ref(null)
 const add = () => {
     adddialogVisible.value = true;
 }
-const getTabledata = () => {
+const getTabledata = async () => {
+
     // 获取列表table数据
-    getAlluser().then(res => {
-        console.log('get all user info list!', res.data)
+    await getAlluser().then(res => {
         tableData.value = res.data.children
+        console.log('get all user info list!', res.data.children, tableData.value)
     })
 }
-getTabledata()
 const getTrick = () => {
     detaildialogVisible.value = true
     getTagTrick().then(res => {
@@ -410,8 +436,8 @@ const submitForm = async () => {
         console.log('huhuhuuuu', form.value)
         addtaguser(form.value).then(res => {
             console.log('post new form success!', res.data)
-            alert(res.data.message)
-            getTabledata()
+            console.log(res.data.message)
+            refreshData()
             adddialogVisible.value = false
             refform.resetFields()
         })
@@ -494,12 +520,12 @@ const submitEdit = () => {
         tagEdit(editid.value, editform.value).then(res => {
             console.log('subchange', res.data)
             refform.resetFields()
-            getTabledata()
+            refreshData()
         }, err => {
             let _resp = err.response
             switch (_resp.status) {
                 case 400:
-                    alert('nonono!bad request in submit!')
+                    ElMessage('nonono!bad request in submit!')
             }
         })
         editdialogVisible.value = false
@@ -543,48 +569,48 @@ const handleDelete = (id) => {
     // })
     tagopera(id, "delete").then(res => {
         console.log(res.data)
-        alert('删除成功！')
-        getTabledata()
+        ElMessage('删除成功！')
+        refreshData()
     }, err => {
         let _resp = err.response
         switch (_resp.status) {
             case 400:
-                alert('nonono!bad request in delete!')
+                ElMessage('nonono!bad request in delete!')
         }
     })
 }
 const handleLock = (id) => {
     tagopera(id, "lock").then(res => {
         console.log(res.data)
-        alert('已锁定！')
-        getTabledata()
+        ElMessage('已锁定！')
+        refreshData()
     }, err => {
         let _resp = err.response
         switch (_resp.status) {
             case 400:
-                alert('nonono!bad request in lock!')
+                ElMessage('nonono!bad request in lock!')
         }
     })
 }
 const handleUnlock = (id) => {
     tagopera(id, "unlock").then(res => {
         console.log(res.data)
-        alert('已解锁！')
-        getTabledata()
+        ElMessage('已解锁！')
+        refreshData()
     })
 }
 const handleFreeze = (id) => {
     tagopera(id, "freeze").then(res => {
         console.log(res.data)
-        getTabledata()
-        alert('已冻结！')
+        refreshData()
+        ElMessage('已冻结！')
     })
 }
 const handleUnfreeze = (id) => {
     tagopera(id, "unfreeze").then(res => {
         console.log(res.data)
-        getTabledata()
-        alert('已解冻！')
+        refreshData()
+        ElMessage('已解冻！')
     })
 }
 // toolbar工具条多选操作
@@ -603,7 +629,7 @@ const muldel = () => {
             console.log(select_orderId.value);
             console.log(select_order_number.value)
             console.log(multipleSelection.value)
-            getTabledata()
+            refreshData()
         })
     } catch (error) {
         console.log('muldel error!')
@@ -633,7 +659,7 @@ const mulfro = () => {
         multagopera("freeze", select_orderId.value).then(res => {
             console.log(res.data)
             multipleTableRef.value.clearSelection()
-            getTabledata()
+            refreshData()
         })
     } catch (error) {
         console.log('mulfre error!')
@@ -645,7 +671,7 @@ const mulunfro = () => {
         multagopera("unfreeze", select_orderId.value).then(res => {
             console.log(res.data)
             multipleTableRef.value.clearSelection()
-            getTabledata()
+            refreshData()
         })
     } catch (error) {
         console.log('mulunfrezz error!')
@@ -657,7 +683,7 @@ const mullock = () => {
         multagopera("lock", select_orderId.value).then(res => {
             console.log(res.data)
             multipleTableRef.value.clearSelection()
-            getTabledata()
+            refreshData()
         })
     } catch (error) {
         console.log('mullock error!')
@@ -669,12 +695,12 @@ const mulunlock = () => {
         multagopera("unlock", select_orderId.value).then(res => {
             console.log(res.data)
             multipleTableRef.value.clearSelection()
-            getTabledata()
+            refreshData()
         }, err => {
             let _resp = err.response
             switch (_resp.status) {
                 case 400:
-                    alert('nonono!bad request in unlock!')
+                    ElMessage('nonono!bad request in unlock!')
             }
         })
     } catch (error) {
