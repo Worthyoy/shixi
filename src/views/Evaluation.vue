@@ -170,7 +170,7 @@
 
             </span>
         </el-dialog>
-        <el-dialog v-model="dialogVisible" title="开始发送邮件">
+        <!-- <el-dialog v-model="dialogVisible" title="开始发送邮件">
             <el-form :model="form" label-width="180px" class="demo-ruleForm">
                 <el-form-item label="选择发送对象">
                     <el-input v-model="form.email"></el-input>
@@ -189,9 +189,9 @@
                 <el-button @click="dialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="submitForm('form')">确 定</el-button>
             </span>
-        </el-dialog>
+        </el-dialog> -->
 
-        <el-dialog v-model="dialogVisible2" title="暂停发送邮件">
+        <!-- <el-dialog v-model="dialogVisible2" title="暂停发送邮件">
             <el-form :model="form1" label-width="180px" class="demo-ruleForm">
                 <el-form-item label="选择暂停对象">
                     <el-input v-model="form1.email"></el-input>
@@ -202,7 +202,7 @@
                 <el-button type="primary" @click="submitForm1('form1')">确 定</el-button>
 
             </span>
-        </el-dialog>
+        </el-dialog> -->
     </div>
 </template>
 <script setup>

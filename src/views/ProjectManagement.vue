@@ -510,7 +510,8 @@ const handleUnlock = async (id) => {
         method: 'put',
         url: '/api/project/' + id + '/pause',
     }).then(async (res) => {
-        if (res.data.message == "项目已锁定。") {
+        if (res.data.message) {
+
             ElMessage({ message: id + '恢复成功', type: 'success' })
             await getTabledata()
             getCurrentPageData(currentPage.value)
